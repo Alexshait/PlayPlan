@@ -1,4 +1,4 @@
-﻿using PlayPlan.DataModel;
+﻿ using PlayPlan.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,9 @@ namespace PlayPlan
 {
     internal interface IAuthorization
     {
-        public string AccessToken { get; }
-        string GetUrlAuth(SettingsData setting);
-
-        string GetAccessToken();
+        //public string AccessToken { get; }
+        string GetUrlAuth();
+        Task<string> GetAccessToken();
 
     }
 }

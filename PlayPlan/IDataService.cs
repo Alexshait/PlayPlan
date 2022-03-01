@@ -14,6 +14,14 @@ namespace PlayPlan
         void CommentRemove(int commentID);
         IEnumerable<TopicComment> GetComments(int topicID);
         int CommentsAmount(int topicID);
+        IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime);
+        IEnumerable<string> GetAllTrailners();
+        int GetGroupID();
+        int GetApiId();
+        string GetVer();
+        string GetVKUrl();
+        void TrainerAddNew(Person person);
+        void TrainerRemove(Person person);
 
     }
 }

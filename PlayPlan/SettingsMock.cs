@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PlayPlan.Test
+namespace PlayPlan
 {
     internal class SettingsMock : IDataService
     {
