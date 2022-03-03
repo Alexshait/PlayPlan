@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace PlayPlan.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModelBase
     {
         private string _webAddress;
         public string WebAddress
@@ -21,19 +21,8 @@ namespace PlayPlan.ViewModels
                 if (_webAddress != value)
                 {
                     _webAddress = value;
-                    RaisePropertyChanged("WebAddress");
+                    OnPropertyChanged("WebAddress");
                 }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

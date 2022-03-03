@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VkNet;
 using System.Threading;
 
 namespace PlayPlan
@@ -32,7 +31,7 @@ namespace PlayPlan
 
         public string GetUrlAuth()
         {
-            return $"{_setting.GetVKUrl()}authorize?client_id={_setting.GetApiId()}&display=page&response_type=token&{_setting.GetVer()}";
+            return $"{_setting.GetVKUrl()}authorize?client_id={_setting.GetApiId()}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{_setting.GetVer()}";
         }
 
         //private async Task<string> RequestTokenAsync(string url, CancellationToken cancelToken = default(CancellationToken))

@@ -49,5 +49,10 @@ namespace PlayPlan
         {
             MessageBox.Show(this.LogonWebBrowser.Source.AbsoluteUri);
         }
+
+        private void LogonWebBrowser_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            MessageBox.Show(this.LogonWebBrowser.Source.AbsoluteUri);
+        }
     }
 }
