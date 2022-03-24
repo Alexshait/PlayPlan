@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace PlayPlan.Views
 {
     /// <summary>
-    /// Логика взаимодействия для SettingsView.xaml
+    /// Логика взаимодействия для LogonViewCtrl.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class LogonViewCtrl : UserControl
     {
-        public SettingsView()
+        public LogonViewCtrl()
         {
             InitializeComponent();
         }

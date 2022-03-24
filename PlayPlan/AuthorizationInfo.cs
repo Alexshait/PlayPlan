@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows;
 
 namespace PlayPlan
 {
@@ -31,7 +32,13 @@ namespace PlayPlan
 
         public string GetUrlAuth()
         {
-            return $"{_setting.GetVKUrl()}authorize?client_id={_setting.GetApiId()}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{_setting.GetVer()}";
+            var settingData = _setting.GetSettingsData();
+            if(settingData == null)
+            {
+                MessageBox.Show("Отсутсвуют необходимые настройки. Укажите данные в разделе 'Настройки'", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+            return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
         }
 
         //private async Task<string> RequestTokenAsync(string url, CancellationToken cancelToken = default(CancellationToken))

@@ -24,10 +24,17 @@ namespace PlayPlan
             throw new NotImplementedException();
         }
 
-        public IEnumerable<string> GetAllTrailners()
+        public IEnumerable<Person> GetAllPersons()
         {
-            throw new NotImplementedException();
+            var result =  new List<Person>();
+            using (var db = new PlayPlanContext())
+            {
+                IQueryable<Person> qry = db.Persons;
+                result = qry.ToList();
+            }
+            return result;
         }
+
 
         public int GetApiId()
         {
@@ -39,9 +46,20 @@ namespace PlayPlan
             throw new NotImplementedException();
         }
 
-        public int GetGroupID()
+
+        public SettingsData GetSettingsData()
         {
-            throw new NotImplementedException();
+            var result = new SettingsData();
+            using (var db = new PlayPlanContext())
+            {
+                
+                var qry = db.Settings.FirstOrDefault(i => i.ID == 0);
+                if (qry is SettingsData data)
+                {
+                    result = data;
+                }
+            }
+            return result;
         }
 
         public IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime)
@@ -54,29 +72,43 @@ namespace PlayPlan
             throw new NotImplementedException();
         }
 
-        public string GetUrl()
+        public void PersonAddNew(Person person)
         {
-            throw new NotImplementedException();
+            using (var db = new PlayPlanContext())
+            {
+                db.Persons.Add(person);
+                db.SaveChanges();
+            }
         }
 
-        public string GetVer()
+        public void PersonRemove(Person person)
         {
-            throw new NotImplementedException();
+            using (var db = new PlayPlanContext())
+            {
+                db.Persons.Remove(person);
+                db.SaveChanges();
+            }
         }
 
-        public string GetVKUrl()
+        public void SettingsSave(SettingsData settingsData)
         {
-            throw new NotImplementedException();
-        }
-
-        public void TrainerAddNew(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TrainerRemove(Person person)
-        {
-            throw new NotImplementedException();
+            using (var db = new PlayPlanContext())
+            {
+                var rec = db.Settings.FirstOrDefault(i => i.ID == 0);
+                if (rec != null)
+                {
+                    rec.ApiID = settingsData.ApiID;
+                    rec.GroupID = settingsData.GroupID;
+                    rec.GroupName = settingsData.GroupName;
+                    rec.VkApiVer = settingsData.VkApiVer;
+                    rec.ApiUrl = settingsData.ApiUrl;
+                }
+                else
+                {
+                    db.Add(settingsData);
+                }
+                db.SaveChanges();
+            }
         }
     }
 }

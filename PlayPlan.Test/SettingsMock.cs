@@ -25,15 +25,13 @@ namespace PlayPlan.Test
             throw new NotImplementedException();
         }
 
-        public IEnumerable<string> GetAllTrailners()
+        public IEnumerable<Person> GetAllPersons()
         {
-            return new List<string>()
-            {
-                "Бтрюков Алексей",
-                "Пирогов Сергей"
+            var lst = new[] { new Person() { PersonName = "Бирюков Алексей", ParsePhrases = "Бирюков"},
+                              new Person() { PersonName = "Пирогов Сергей", ParsePhrases = "Пирогов" },
             };
+            return lst;
         }
-
         public int GetApiId()
         {
             return 8073115;
@@ -69,14 +67,19 @@ namespace PlayPlan.Test
             return "https://oauth.vk.com/";
         }
 
-        public void TrainerAddNew(Person person)
+        public void PersonAddNew(Person person)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void TrainerRemove(Person person)
+        public void PersonRemove(Person person)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<string> IDataService.GetAllPersons()
+        {
+            throw new NotImplementedException();
         }
     }
 }

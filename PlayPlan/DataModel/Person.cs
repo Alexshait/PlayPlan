@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PlayPlan.DataModel
 {
-    internal class Person
+    public class Person
     {
         public int ID { get; set; }
         public string PersonName { get; set; }
-        public string? ParsePhrases { get; set; }
+        public string ParsePhrases { get; set; }
     }
 }

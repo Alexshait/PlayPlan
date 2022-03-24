@@ -6,28 +6,22 @@
         xmlns:local="clr-namespace:PlayPlan" 
         xmlns:viewmodels="clr-namespace:PlayPlan.ViewModels"
         xmlns:views="clr-namespace:PlayPlan.Views"
-        d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="PlayPlan" Height="550" Width="800" Loaded="Window_Loaded">
-    <Grid Margin="30 30" MaxWidth="800" MaxHeight="600">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="19*"/>
-            <ColumnDefinition Width="36*"/>
-            <ColumnDefinition Width="195*"/>
-            <ColumnDefinition Width="50"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="300" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
-        <WebBrowser Grid.Row="1" Margin="57,0,65,0" local:WebBrowserBinding.BindableSource="{Binding WebAddress}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            x:Name="LogonWebBrowser" Grid.ColumnSpan="3" Navigated="LogonWebBrowser_Navigated"
-         />
-        <Button Content="Show Url" Grid.Column="2" Grid.Row="2" Command="{Binding ClickCommand}" HorizontalAlignment="Left"  Width="100" Height="40" Margin="189,5,0,5"/>
-        <Button Content="Event Link" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Left"  Width="100" Height="40" Click="Button_Click" Margin="189,5,0,5"/>
-    </Grid>
+        Title="PlayPlan" MinHeight="550" MinWidth="600" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:LogonViewModel}">
+            <views:LogonViewCtrl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+            <views:MainView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ContentControl Content="{Binding CurrentViewModel}" />
+    </ScrollViewer>
 </Window>

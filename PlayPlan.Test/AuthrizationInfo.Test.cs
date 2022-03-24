@@ -30,5 +30,13 @@ namespace PlayPlan.Test
             var expectedLenth = 85;
             Assert.AreEqual(expectedLenth, actual.ToString().Length);
         }
+
+        //Person person = new Person()
+        //{
+        //ID = 1,
+        //PersonName = "Пирогов Сергей"
+        //};
+
+
     }
 }

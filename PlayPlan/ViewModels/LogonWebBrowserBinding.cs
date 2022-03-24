@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PlayPlan
+namespace PlayPlan.ViewModels
 {
-    public class WebBrowserBinding
+    internal class LogonWebBrowserBinding
     {
         public static readonly DependencyProperty BindableSourceProperty =
-            DependencyProperty.RegisterAttached("BindableSource", typeof(string), typeof(WebBrowserBinding), new UIPropertyMetadata(null, BindableSourcePropertyChanged));
+            DependencyProperty.RegisterAttached("BindableSource", typeof(string), typeof(LogonWebBrowserBinding), new UIPropertyMetadata(null, BindableSourcePropertyChanged));
 
         public static string GetBindableSource(DependencyObject obj)
         {

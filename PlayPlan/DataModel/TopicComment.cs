@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlayPlan.DataModel
 {
-    internal class TopicComment
+    public class TopicComment
     {
         [Key]
         public int Topic_ID { get; set; }

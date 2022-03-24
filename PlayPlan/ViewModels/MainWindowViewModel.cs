@@ -7,45 +7,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using PlayPlan.ViewModels;
+using PlayPlan.Views;
 
 namespace PlayPlan.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private string _webAddress;
-        public string WebAddress
+        private ViewModelBase _currentViewModel;
+        private ViewNavigation _navigator;
+        private IDataService _ds;
+
+        public MainWindowViewModel()
         {
-            get { return _webAddress; }
+            //CurrentViewModel = new LogonViewModel() { PageTitle = "LOGON",
+            // WebAddress = @"https://oauth.vk.com/authorize?client_id=8073115&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.131"
+            //};
+            _navigator = new ViewNavigation();
+            _ds = new DataService();
+            _navigator.MainWindowVM = this;
+            _navigator.CurrentViewModel = new MainViewModel(_navigator, _ds);
+            CurrentViewModel = _navigator.CurrentViewModel;
+        }
+
+        public ViewModelBase CurrentViewModel
+        {
+            get { return _currentViewModel; }
             set
             {
-                if (_webAddress != value)
-                {
-                    _webAddress = value;
-                    OnPropertyChanged("WebAddress");
-                }
+                _currentViewModel = value;
+                this.OnPropertyChanged("CurrentViewModel");
             }
         }
 
-        private ICommand _clickCommand;
-        public ICommand ClickCommand
-        {
-            get
-            {
-                return _clickCommand ?? (_clickCommand = new TestCommand(o => MyAction(), () => CanExecute));
-            }
-        }
-        public bool CanExecute
-        {
-            get
-            {
-                // check if executing is allowed, i.e., validate, check if a process is running, etc. 
-                return true;
-            }
-        }
-
-        public void MyAction()
-        {
-            MessageBox.Show("test");
-        }
     }
 }

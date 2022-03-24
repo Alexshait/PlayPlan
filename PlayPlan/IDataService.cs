@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlayPlan
 {
-    internal interface IDataService
+    public interface IDataService
     {
         IEnumerable<Topic> GetTopicsAll();
         void CommentAddNew(TopicComment topicComment);
@@ -15,13 +15,11 @@ namespace PlayPlan
         IEnumerable<TopicComment> GetComments(int topicID);
         int CommentsAmount(int topicID);
         IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime);
-        IEnumerable<string> GetAllTrailners();
-        int GetGroupID();
-        int GetApiId();
-        string GetVer();
-        string GetVKUrl();
-        void TrainerAddNew(Person person);
-        void TrainerRemove(Person person);
+        IEnumerable<Person> GetAllPersons();
+        SettingsData GetSettingsData();
+        void PersonAddNew(Person person);
+        void PersonRemove(Person person);
+        void SettingsSave(SettingsData settingsData);
 
     }
 }

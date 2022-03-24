@@ -19,11 +19,20 @@ namespace PlayPlan.DataModel
         public PlayPlanContext()
         {
             var folder = Environment.CurrentDirectory;
-            //var folder = @"C:\Users\alexey\MEGA\Works\Git\PlayPlan\PlayPlan";
-            //var path = Environment.GetFolderPath(folder);
             DbPath = System.IO.Path.Join(folder, DBaseName);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SettingsData>(entity =>
+            {
+                // Set key for entity
+                entity.HasKey(p => p.ApiID);
+            });
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
