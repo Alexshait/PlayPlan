@@ -32,13 +32,14 @@ namespace PlayPlan
 
         public string GetUrlAuth()
         {
-            var settingData = _setting.GetSettingsData();
+            var settingData = _setting.GetSettingsDataAsync();
             if(settingData == null)
             {
                 MessageBox.Show("Отсутсвуют необходимые настройки. Укажите данные в разделе 'Настройки'", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
-            return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
+            //return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
+            throw new NotImplementedException();
         }
 
         //private async Task<string> RequestTokenAsync(string url, CancellationToken cancelToken = default(CancellationToken))

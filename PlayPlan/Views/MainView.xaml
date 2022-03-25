@@ -3,9 +3,11 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+         xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
          xmlns:local="clr-namespace:PlayPlan" 
          mc:Ignorable="d" >
     <Grid Margin="100">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
             <ColumnDefinition />
@@ -22,6 +24,7 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
+        
         <Button x:Name="DownLoadFromVK" Content="Загрузить данные из ВК" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Command="{Binding DownLoadBtnCmd}"/>
         <Button x:Name="SettingsBtn" Content="Настройки" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="1" Command="{Binding Path=SettingsBtnCmd}"/>
         <Button x:Name="AddBtn"  Grid.Column="0" Grid.Row="6" Width="30" HorizontalAlignment="Left" Command="{Binding AddBtnCmd}">
@@ -33,8 +36,13 @@
         <Button x:Name="SaveBtn" Content="Сохранить" Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="1" Command="{Binding SaveBtnCmd}" />
         <Button x:Name="ExportBtn" Content="Выгрузить в Excel" Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="1" Command="{Binding ExportBtnCmd}" />
         <DatePicker Grid.Row="2" Grid.Column="0" x:Name="DatePkr" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="GroupCB" Grid.ColumnSpan="1" Margin="10 0 10 0"/>
-        <ComboBox Grid.Row="2" Grid.Column="2" x:Name="PersonCB" Grid.ColumnSpan="1" />
+        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="GroupsCB" Grid.ColumnSpan="1" Margin="10 0 10 0"/>
+        <ComboBox Grid.Row="2" Grid.Column="2" x:Name="PersonsCB" Grid.ColumnSpan="1"  
+                  ItemsSource="{Binding Persons}" 
+                  DisplayMemberPath="PersonName" 
+                  SelectedItem="{Binding SelectedPerson}"
+                  SelectedValuePath="ID"
+                  SelectedValue="{Binding Path=SelectedPersonID}"/>
 
         <ListView x:Name="CommentsLst" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="1">
             <ListView.ItemContainerStyle>
@@ -68,5 +76,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <custom:LoadingSpinner Grid.Column="1" Grid.Row="4" HorizontalAlignment="Center"
+                Diameter="100"
+                IsLoading="{Binding IsLoading}"
+                Thickness="5"
+                Color="Green" />
     </Grid>
 </UserControl>

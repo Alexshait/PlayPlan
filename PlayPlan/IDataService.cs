@@ -15,8 +15,8 @@ namespace PlayPlan
         IEnumerable<TopicComment> GetComments(int topicID);
         int CommentsAmount(int topicID);
         IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime);
-        IEnumerable<Person> GetAllPersons();
-        SettingsData GetSettingsData();
+        Task<IEnumerable<Person>> GetAllPersonsAsync();
+        Task<IEnumerable<SettingsData>> GetSettingsDataAsync();
         void PersonAddNew(Person person);
         void PersonRemove(Person person);
         void SettingsSave(SettingsData settingsData);
