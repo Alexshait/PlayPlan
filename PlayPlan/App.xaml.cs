@@ -5,8 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
-using PlayPlan.DataModel;
 
 namespace PlayPlan
 {
@@ -17,12 +15,6 @@ namespace PlayPlan
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            //string DBaseName = ConfigurationManager.AppSettings.Get("DBaseName") ?? "Playplan.db";
-            //PlayPlanContextInitializer playPlanContextInitializer = new PlayPlanContextInitializer(DBaseName);
-            //using (PlayPlanContext dbContext = playPlanContextInitializer.CreateDbContext())
-            //{
-            //    dbContext.Database.Migrate();
-            //}
 
             base.OnStartup(e);
 

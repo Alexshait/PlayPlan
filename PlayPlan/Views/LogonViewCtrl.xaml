@@ -5,21 +5,21 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
          xmlns:viewmodels="clr-namespace:PlayPlan.ViewModels" 
          xmlns:local="clr-namespace:PlayPlan" 
-         mc:Ignorable="d" Height="370" Width="500">
+         mc:Ignorable="d" Height="370" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition />
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <WebBrowser Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" viewmodels:LogonWebBrowserBinding.BindableSource="{Binding WebAddress}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            x:Name="LogonWebBrowserCtrl" Margin="0,0,0,0" />
+        <WebBrowser Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" 
+            viewmodels:LogonWebBrowserBinding.BindableSource="{Binding Path=(viewmodels:LogonViewModel.WebAddress), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            viewmodels:LogonWebBrowserBinding.ShouldHandleNavigated="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            x:Name="LogonWebBrowserCtrl" />
+        <Button Content="Назад" Grid.Column="0" Grid.Row="1" Width="150" Command="{Binding BackBtn}" />
     </Grid>
 </UserControl>

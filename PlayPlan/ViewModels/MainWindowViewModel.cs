@@ -20,9 +20,7 @@ namespace PlayPlan.ViewModels
 
         public MainWindowViewModel()
         {
-            //CurrentViewModel = new LogonViewModel() { PageTitle = "LOGON",
-            // WebAddress = @"https://oauth.vk.com/authorize?client_id=8073115&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.131"
-            //};
+
             _navigator = new ViewNavigation();
             _ds = new DataService();
             _navigator.MainWindowVM = this;

@@ -1,6 +1,7 @@
 ﻿using PlayPlan.DataModel;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PlayPlan.Test
 {
@@ -32,9 +33,20 @@ namespace PlayPlan.Test
             };
             return lst;
         }
+
+        public Task<IEnumerable<Person>> GetAllPersonsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetApiId()
         {
             return 8073115;
+        }
+
+        public string GetAuthUrl()
+        {
+            return @"https://oauth.vk.com/access_token?client_id=8073115&client_secret=0gx7Of99iqrtqPLwQmUA&redirect_uri=http://1gb.ru&code=558e4a22e5ac353dcc";
         }
 
         public IEnumerable<TopicComment> GetComments(int topicID)
@@ -45,6 +57,11 @@ namespace PlayPlan.Test
         public int GetGroupID()
         {
             return 190120334;
+        }
+
+        public Task<IEnumerable<SettingsData>> GetSettingsDataAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime)
@@ -77,7 +94,7 @@ namespace PlayPlan.Test
             throw new NotImplementedException();
         }
 
-        IEnumerable<string> IDataService.GetAllPersons()
+        public void SettingsSave(SettingsData settingsData)
         {
             throw new NotImplementedException();
         }

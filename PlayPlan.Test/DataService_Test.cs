@@ -16,12 +16,11 @@ namespace PlayPlan.Test
             _dataService = new SettingsMock();
         }
         [Test]
-        public void GetAllPersons_Test()
+        public void GetAuthUrl_Test()
         {
-            var Auth = new AuthorizationInfo(_dataService);
-            var actual = Auth.GetAccessToken();
-            var expectedLenth = 85;
-            Assert.AreEqual(expectedLenth, actual.ToString().Length);
+            var Auth = _dataService.GetAuthUrl();
+            var expected = @"https://oauth.vk.com/access_token?client_id=8073115&client_secret=0gx7Of99iqrtqPLwQmUA&redirect_uri=http://1gb.ru&code=558e4a22e5ac353dcc";
+            Assert.AreEqual(expected, Auth);
         }
     }
 }

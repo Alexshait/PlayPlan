@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace PlayPlan.ViewModels
         private bool _isLoading;
         private ObservableCollection<Person> _persons;
         private Person _selectedPerson;
+        private VkAuthorization _vkAuthorization;
         public MainViewModel(ViewNavigation viewNavigation, IDataService ds)
         {
             IsLoading = true;
@@ -77,7 +79,18 @@ namespace PlayPlan.ViewModels
         }
         private void RunDownLoadBtnCmd()
         {
-            MessageBox.Show(_selectedPerson.PersonName + " " + _selectedPersonID);
+            //IsLoading = true;
+            _viewNavigation.SourceViewModel = this;
+            _vkAuthorization = VkAuthorization.GetInstance(_ds);
+            if (!_vkAuthorization.AuthorizationIsSuccess)
+            {
+                var logonViewModel = new LogonViewModel(_viewNavigation, _vkAuthorization);
+                logonViewModel.UrlUpdated += OnUrlUpdated;
+                _viewNavigation.CurrentViewModel = logonViewModel;
+                _viewNavigation.MainWindowVM.CurrentViewModel = logonViewModel;
+            }
+            
+
         }
         private void RunAddBtnCmd()
         {
@@ -89,8 +102,7 @@ namespace PlayPlan.ViewModels
         }
         private void RunSaveBtnCmd()
         {
-            RunGetAllPersonsAsync();
-            OnPropertyChanged(nameof(Persons));
+            
         }
         private void RunExportBtnCmd()
         {
@@ -120,8 +132,22 @@ namespace PlayPlan.ViewModels
                         IsLoading = false;
                     }
                 });
+            });
+        }
+
+        void OnUrlUpdated(object sender, EventArgs e)
+        {
+            if (_viewNavigation.CurrentViewModel is LogonViewModel vm)
+            {
+                if (_vkAuthorization.AuthorizationIsSuccess)
+                {
+                    _viewNavigation.MainWindowVM.CurrentViewModel = this;
+                    _viewNavigation.CurrentViewModel = this;
+                    vm.Dispose();
+                    Debug.WriteLine("Authize success");
+                }
             }
-            );
+            
         }
     }
 }

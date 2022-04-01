@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace PlayPlan
 {
-    internal interface IAuthorization
+    public interface IAuthorization
     {
-        //public string AccessToken { get; }
-        string GetUrlAuth();
-        Task<string> GetAccessToken();
-
+        public string AccessToken { get; set; }
+        public DateTime AccessTokenExiration { get; set; }
+        public string ResponseAuthUrl { set; }
+        public bool AuthorizationIsSuccess { get; set; }
+        //public static VkAuthorization GetInstance(IDataService ds);
     }
 }

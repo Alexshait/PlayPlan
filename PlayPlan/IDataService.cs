@@ -20,6 +20,7 @@ namespace PlayPlan
         void PersonAddNew(Person person);
         void PersonRemove(Person person);
         void SettingsSave(SettingsData settingsData);
+        string GetAuthUrl();
 
     }
 }

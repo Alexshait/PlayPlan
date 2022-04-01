@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace PlayPlan
 {
@@ -57,6 +58,17 @@ namespace PlayPlan
             throw new NotImplementedException();
         }
 
+        public string GetAuthUrl()
+        {
+            var settingData = GetSettingsDataAsync().Result.FirstOrDefault();
+            if (settingData == null)
+            {
+                MessageBox.Show("Отсутсвуют необходимые настройки. Укажите данные в разделе 'Настройки'", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+            return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
+        }
+
         public IEnumerable<TopicComment> GetComments(int topicID)
         {
             throw new NotImplementedException();
@@ -67,7 +79,6 @@ namespace PlayPlan
             var result = new List<SettingsData>();
             using (var db = new PlayPlanContext())
             {
-
                 var qry = await db.Settings.Where(i => i.ID == 0).ToListAsync();
                 if (qry != null)
                 {
