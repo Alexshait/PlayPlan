@@ -86,16 +86,5 @@ namespace PlayPlan
             return _instance;
         }
 
-
-
-        //private async Task<string> RequestTokenAsync(string url, CancellationToken cancelToken = default(CancellationToken))
-        //{
-        //    using (HttpClient httpClient = new HttpClient())
-        //    {
-        //        var response = await httpClient.GetAsync(url);
-        //        var tt = await response.Content.ReadAsStringAsync();
-        //        return tt;
-        //    }
-        //}
     }
 }

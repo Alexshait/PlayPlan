@@ -21,6 +21,7 @@ namespace PlayPlan
         void PersonRemove(Person person);
         void SettingsSave(SettingsData settingsData);
         string GetAuthUrl();
+        public SettingsData GetSettingsData();
 
     }
 }

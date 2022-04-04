@@ -9,6 +9,9 @@ using System.Windows;
 using System.Windows.Input;
 using PlayPlan.Commands;
 using PlayPlan.DataModel;
+using PlayPlan.DataDeserialized;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace PlayPlan.ViewModels
 {
@@ -19,7 +22,9 @@ namespace PlayPlan.ViewModels
         private bool _isLoading;
         private ObservableCollection<Person> _persons;
         private Person _selectedPerson;
+        public ObservableCollection<Topic> _topics;
         private VkAuthorization _vkAuthorization;
+        private SettingsData _settingsData;
         public MainViewModel(ViewNavigation viewNavigation, IDataService ds)
         {
             IsLoading = true;
@@ -54,11 +59,25 @@ namespace PlayPlan.ViewModels
             set { _selectedPerson = value; }
         }
         private int _selectedPersonID;
-
         public int SelectedPersonID
         {
             get { return _selectedPersonID; }
             set { _selectedPersonID = value; }
+        }
+        //public ObservableCollection<Topic> Topics => _topics;
+
+        public ObservableCollection<Topic> Topics => _topics;
+        //{
+        //    get { return => _topics; }
+        //    set { _topics = value; }
+        //}
+
+
+        private int _selectedTopicID;
+        public int SelectedTopicID
+        {
+            get { return _selectedTopicID; }
+            set { _selectedTopicID = value; }
         }
 
         public TopicComment topicComment { get; set; }
@@ -89,12 +108,16 @@ namespace PlayPlan.ViewModels
                 _viewNavigation.CurrentViewModel = logonViewModel;
                 _viewNavigation.MainWindowVM.CurrentViewModel = logonViewModel;
             }
-            
+            else
+            {
+                _settingsData = _ds.GetSettingsData();
+                var dataApi = new DataApi(_vkAuthorization, _settingsData, this);
+            }
+            MessageBox.Show("continuation");
 
         }
         private void RunAddBtnCmd()
         {
-
         }
         private void RunRemoveBtnCmd()
         {
@@ -149,5 +172,6 @@ namespace PlayPlan.ViewModels
             }
             
         }
+
     }
 }

@@ -53,11 +53,6 @@ namespace PlayPlan
         //}
 
 
-        public int GetApiId()
-        {
-            throw new NotImplementedException();
-        }
-
         public string GetAuthUrl()
         {
             var settingData = GetSettingsDataAsync().Result.FirstOrDefault();
@@ -87,21 +82,6 @@ namespace PlayPlan
             }
             return result;
         }
-
-        //public SettingsData GetSettingsData()
-        //{
-        //    var result = new SettingsData();
-        //    using (var db = new PlayPlanContext())
-        //    {
-
-        //        var qry = db.Settings.FirstOrDefault(i => i.ID == 0);
-        //        if (qry is SettingsData data)
-        //        {
-        //            result = data;
-        //        }
-        //    }
-        //    return result;
-        //}
 
         public IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime)
         {
@@ -150,6 +130,17 @@ namespace PlayPlan
                 }
                 db.SaveChanges();
             }
+        }
+
+        public SettingsData GetSettingsData()
+        {
+            var settingData = GetSettingsDataAsync().Result.FirstOrDefault();
+            if (settingData == null)
+            {
+                MessageBox.Show("Отсутсвуют необходимые настройки. Укажите данные в разделе 'Настройки'", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+            return settingData;
         }
     }
 }
