@@ -18,14 +18,16 @@ namespace PlayPlan.ViewModels
         private ViewNavigation _viewNavigation;
         VkAuthorization _vkAuthorization;
         private string _webAddress;
+        private IDataService _ds;
 
         public event EventHandler UrlUpdated;
 
-        public LogonViewModel(ViewNavigation viewNavigation, VkAuthorization vkAuthorization)
+        public LogonViewModel(ViewNavigation viewNavigation, VkAuthorization vkAuthorization,  IDataService ds)
         {
             _viewNavigation = viewNavigation;
             _vkAuthorization = vkAuthorization;
             _webAddress = vkAuthorization.AuthUrl;
+            _ds = ds;
 
             BackBtn = new DelegateCommand(o => this.RunBackBtn());
         }
@@ -45,6 +47,8 @@ namespace PlayPlan.ViewModels
                         _vkAuthorization.ResponseAuthUrl = _webAddress;
                         Debug.WriteLine(_webAddress);
                         UrlUpdated?.Invoke(this, EventArgs.Empty);
+                        var SettingsData = _ds.GetSettingsData();
+                        DataApi.RunGetTopics(_vkAuthorization.AccessToken, SettingsData, _viewNavigation.SourceViewModel as MainViewModel);
                     }
                 }
             }

@@ -15,21 +15,8 @@ using System.Windows;
 
 namespace PlayPlan
 {
-    public class DataApi : IDisposable
+    public static class DataApi
     {
-        private VkAuthorization _vkAuthorization;
-        private SettingsData _settingData;
-        //private DsTopics.Item[] _topicItems;
-        private MainViewModel _mainViewModel;
-
-        public DataApi(VkAuthorization vkAuthorization, SettingsData settingsData, MainViewModel mainViewModel)
-        {
-            _vkAuthorization = vkAuthorization;
-            _settingData = settingsData;
-            _mainViewModel = mainViewModel;
-            RunGetTopics(_vkAuthorization.AccessToken, _settingData);
-        }
-
         private enum ApiRequest
         {
             TOPICS,
@@ -37,16 +24,7 @@ namespace PlayPlan
             COMMENTS
         }
 
-        //public IEnumerable<DsTopics.Item> TopicItems
-        //{
-        //    get 
-        //    {
-        //        RunGetTopics(_vkAuthorization.AccessToken, _settingData);
-        //        return _topicItems; 
-        //    }
-        //}
-
-        private async Task<DsTopics.Item[]> GetTopicsAsync(string accessToken, SettingsData settingsData)
+        private static async Task<DsTopics.Item[]> GetTopicsAsync(string accessToken, SettingsData settingsData)
         {
             DsTopics.Item[] result = null;
             string url = GetRequestApiUrl(ApiRequest.TOPICS, accessToken, settingsData);
@@ -69,7 +47,7 @@ namespace PlayPlan
             return result;
         }
 
-        private void RunGetTopics(string accessToken, SettingsData settingsData)
+        public static void RunGetTopics(string accessToken, SettingsData settingsData, MainViewModel _mainViewModel)
         {
             //CancellationTokenSource ct = new CancellationTokenSource();
             //ct.CancelAfter(5000);
@@ -80,7 +58,7 @@ namespace PlayPlan
                 {
                     try
                     {
-                        _mainViewModel._topics = new ObservableCollection<Topic>(DsMapping.MapTopics(t.Result));
+                        _mainViewModel.Topics = new ObservableCollection<Topic>(DsMapping.MapTopics(t.Result));
                         _mainViewModel.OnPropertyChanged(nameof(_mainViewModel.Topics));
                     }
                     catch (Exception ex)
@@ -97,7 +75,7 @@ namespace PlayPlan
             );
         }
 
-        private string GetRequestApiUrl(ApiRequest apiRewuest, string accessToken, SettingsData settingsData, int parameter = 0)
+        private static string GetRequestApiUrl(ApiRequest apiRewuest, string accessToken, SettingsData settingsData, int parameter = 0)
         {
             string result = String.Empty;
             switch (apiRewuest) 
@@ -133,11 +111,6 @@ namespace PlayPlan
                     }
             }
             return result;
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

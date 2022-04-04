@@ -22,7 +22,7 @@ namespace PlayPlan.ViewModels
         private bool _isLoading;
         private ObservableCollection<Person> _persons;
         private Person _selectedPerson;
-        public ObservableCollection<Topic> _topics;
+        private ObservableCollection<Topic> _topics;
         private VkAuthorization _vkAuthorization;
         private SettingsData _settingsData;
         public MainViewModel(ViewNavigation viewNavigation, IDataService ds)
@@ -64,13 +64,12 @@ namespace PlayPlan.ViewModels
             get { return _selectedPersonID; }
             set { _selectedPersonID = value; }
         }
-        //public ObservableCollection<Topic> Topics => _topics;
 
-        public ObservableCollection<Topic> Topics => _topics;
-        //{
-        //    get { return => _topics; }
-        //    set { _topics = value; }
-        //}
+        public ObservableCollection<Topic> Topics
+        {
+            get { return  _topics; }
+            set { _topics = value; }
+        }
 
 
         private int _selectedTopicID;
@@ -98,12 +97,12 @@ namespace PlayPlan.ViewModels
         }
         private void RunDownLoadBtnCmd()
         {
-            //IsLoading = true;
+            IsLoading = true;
             _viewNavigation.SourceViewModel = this;
             _vkAuthorization = VkAuthorization.GetInstance(_ds);
             if (!_vkAuthorization.AuthorizationIsSuccess)
             {
-                var logonViewModel = new LogonViewModel(_viewNavigation, _vkAuthorization);
+                var logonViewModel = new LogonViewModel(_viewNavigation, _vkAuthorization, _ds);
                 logonViewModel.UrlUpdated += OnUrlUpdated;
                 _viewNavigation.CurrentViewModel = logonViewModel;
                 _viewNavigation.MainWindowVM.CurrentViewModel = logonViewModel;
@@ -111,9 +110,8 @@ namespace PlayPlan.ViewModels
             else
             {
                 _settingsData = _ds.GetSettingsData();
-                var dataApi = new DataApi(_vkAuthorization, _settingsData, this);
+                DataApi.RunGetTopics(_vkAuthorization.AccessToken, _settingsData, this);
             }
-            MessageBox.Show("continuation");
 
         }
         private void RunAddBtnCmd()

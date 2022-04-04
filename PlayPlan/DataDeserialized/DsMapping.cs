@@ -13,17 +13,17 @@ namespace PlayPlan.DataDeserialized
         public static IEnumerable<Topic> MapTopics(DsTopics.Item[] items)
         {
             var result = new List<Topic>();
-            for (int i = 0; i < items.Count(); i++)
+            foreach (DsTopics.Item item in items)
             {
                 var topicItem = new Topic();
-                topicItem.TopicID = items[i].id;
-                topicItem.TopicTitle = items[i].title;
+                topicItem.TopicID = item.id;
+                topicItem.TopicTitle = item.title;
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                topicItem.TopicDateCreate = dateTime.AddSeconds(items[i].created).ToLocalTime();
-                topicItem.TopicDateUpdate = dateTime.AddSeconds(items[i].updated).ToLocalTime();
-                topicItem.TopicCreatedBy = items[i].created_by;
-                topicItem.TopicUpdatedBy = items[i].updated_by;
-                topicItem.TopicCommentsAmount = items[i].comments;
+                topicItem.TopicDateCreate = dateTime.AddSeconds(item.created).ToLocalTime();
+                topicItem.TopicDateUpdate = dateTime.AddSeconds(item.updated).ToLocalTime();
+                topicItem.TopicCreatedBy = item.created_by;
+                topicItem.TopicUpdatedBy = item.updated_by;
+                topicItem.TopicCommentsAmount = item.comments;
 
                 result.Add(topicItem);
             }
@@ -33,14 +33,14 @@ namespace PlayPlan.DataDeserialized
         public static IEnumerable<TopicComment> MapComments(DsComments.Item[] items)
         {
             var result = new List<TopicComment>();
-            for (int i = 0; i < items.Count(); i++)
+            foreach (DsComments.Item item in items)
             {
                 var CommentItem = new TopicComment();
-                CommentItem.Topic_ID = items[i].id;
-                CommentItem.Comment = items[i].text;
+                CommentItem.Topic_ID = item.id;
+                CommentItem.Comment = item.text;
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                CommentItem.DateComment = dateTime.AddSeconds(items[i].date).ToLocalTime();
-                CommentItem.PersonID = items[i].from_id;
+                CommentItem.DateComment = dateTime.AddSeconds(item.date).ToLocalTime();
+                CommentItem.PersonID = item.from_id;
 
                 result.Add(CommentItem);
             }
