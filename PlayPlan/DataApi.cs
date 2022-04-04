@@ -60,6 +60,63 @@ namespace PlayPlan
                     {
                         _mainViewModel.Topics = new ObservableCollection<Topic>(DsMapping.MapTopics(t.Result));
                         _mainViewModel.OnPropertyChanged(nameof(_mainViewModel.Topics));
+                        RunGetComments(accessToken, settingsData, _mainViewModel);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        //_mainViewModel.IsLoading = false;
+                    }
+
+                });
+            }
+            );
+        }
+
+        private static async Task<List<DsTopicComments>> GetCommentsAsync(string accessToken, SettingsData settingsData, IEnumerable<Topic> topics)
+        {
+            List<DsTopicComments> result = new List<DsTopicComments>();
+            foreach (Topic topic in topics)
+            {
+                string url = GetRequestApiUrl(ApiRequest.COMMENTS, accessToken, settingsData, topic.TopicID);
+                string Content;
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var Response = await httpClient.GetAsync(url);
+                    Content = await Response.Content.ReadAsStringAsync();
+                }
+                if (Content != null)
+                {
+                    var jsonFormater = new DataContractJsonSerializer(typeof(DsComments.Rootobject));
+                    MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(Content));
+                    if (jsonFormater.ReadObject(memStream) is DsComments.Rootobject dsTComments)
+                    {
+                        var topicComment = new DsTopicComments() { TopicId = topic.TopicID, Items = dsTComments.response.items };
+                        result.Add(topicComment);
+                        Task.Delay(400).Wait(); // VK api requests amount per second are limited - 3 request per second
+                    }
+                }
+            }
+            
+            return result;
+        }
+
+        public static void RunGetComments(string accessToken, SettingsData settingsData, MainViewModel _mainViewModel)
+        {
+            //CancellationTokenSource ct = new CancellationTokenSource();
+            //ct.CancelAfter(5000);
+            Task.Run(() =>
+            {
+                Task<List<DsTopicComments>> task = GetCommentsAsync(accessToken, settingsData, _mainViewModel.Topics);
+                task.ContinueWith(t =>
+                {
+                    try
+                    {
+                        _mainViewModel.Comments = new ObservableCollection<TopicComment>(DsMapping.MapComments(t.Result));
+                        _mainViewModel.OnPropertyChanged(nameof(_mainViewModel.Comments));
                     }
                     catch (Exception ex)
                     {
@@ -74,6 +131,7 @@ namespace PlayPlan
             }
             );
         }
+
 
         private static string GetRequestApiUrl(ApiRequest apiRewuest, string accessToken, SettingsData settingsData, int parameter = 0)
         {

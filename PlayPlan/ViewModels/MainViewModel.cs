@@ -23,6 +23,7 @@ namespace PlayPlan.ViewModels
         private ObservableCollection<Person> _persons;
         private Person _selectedPerson;
         private ObservableCollection<Topic> _topics;
+        private ObservableCollection<TopicComment> _comments;
         private VkAuthorization _vkAuthorization;
         private SettingsData _settingsData;
         public MainViewModel(ViewNavigation viewNavigation, IDataService ds)
@@ -70,7 +71,11 @@ namespace PlayPlan.ViewModels
             get { return  _topics; }
             set { _topics = value; }
         }
-
+        public ObservableCollection<TopicComment> Comments
+        {
+            get { return _comments; }
+            set { _comments = value; }
+        }
 
         private int _selectedTopicID;
         public int SelectedTopicID
@@ -111,6 +116,7 @@ namespace PlayPlan.ViewModels
             {
                 _settingsData = _ds.GetSettingsData();
                 DataApi.RunGetTopics(_vkAuthorization.AccessToken, _settingsData, this);
+                //DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this);
             }
 
         }

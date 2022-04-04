@@ -23,5 +23,10 @@ namespace PlayPlan.Views
         {
             InitializeComponent();
         }
+
+        private void CommentsLst_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+
+        }
     }
 }

@@ -49,6 +49,7 @@ namespace PlayPlan.ViewModels
                         UrlUpdated?.Invoke(this, EventArgs.Empty);
                         var SettingsData = _ds.GetSettingsData();
                         DataApi.RunGetTopics(_vkAuthorization.AccessToken, SettingsData, _viewNavigation.SourceViewModel as MainViewModel);
+                        //DataApi.RunGetComments(_vkAuthorization.AccessToken, SettingsData, _viewNavigation.SourceViewModel as MainViewModel);
                     }
                 }
             }
