@@ -6,7 +6,7 @@
          xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
          xmlns:local="clr-namespace:PlayPlan" 
          mc:Ignorable="d" >
-    <Grid Margin="100">
+    <Grid Margin="60">
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -18,7 +18,7 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="140*"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="20"/>
@@ -49,7 +49,7 @@
                   SelectedValue="{Binding Path=SelectedPersonID}"/>
 
         <ListView x:Name="CommentsLst" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="1" 
-                  ItemsSource="{Binding Comments}" Height="300" >
+                  ItemsSource="{Binding Comments}" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />

@@ -68,12 +68,16 @@ namespace PlayPlan.ViewModels
 
         public ObservableCollection<Topic> Topics
         {
-            get { return  _topics; }
+            get { return _topics;  }
             set { _topics = value; }
         }
         public ObservableCollection<TopicComment> Comments
         {
-            get { return _comments; }
+            get 
+            {
+                var filtredComments = _comments?.Where(t => t.Topic_ID == _selectedTopicID);
+                return (filtredComments != null) ? new ObservableCollection<TopicComment>(filtredComments) : null; 
+            }
             set { _comments = value; }
         }
 
@@ -81,7 +85,11 @@ namespace PlayPlan.ViewModels
         public int SelectedTopicID
         {
             get { return _selectedTopicID; }
-            set { _selectedTopicID = value; }
+            set 
+            { 
+                _selectedTopicID = value;
+                OnPropertyChanged(nameof(Comments));
+            }
         }
 
         public TopicComment topicComment { get; set; }
