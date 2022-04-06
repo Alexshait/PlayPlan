@@ -60,63 +60,6 @@ namespace PlayPlan
                     {
                         _mainViewModel.Topics = new ObservableCollection<Topic>(DsMapping.MapTopics(t.Result));
                         _mainViewModel.OnPropertyChanged(nameof(_mainViewModel.Topics));
-                        RunGetComments(accessToken, settingsData, _mainViewModel);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    finally
-                    {
-                        //_mainViewModel.IsLoading = false;
-                    }
-
-                });
-            }
-            );
-        }
-
-        private static async Task<List<DsTopicComments>> GetCommentsAsync(string accessToken, SettingsData settingsData, IEnumerable<Topic> topics)
-        {
-            List<DsTopicComments> result = new List<DsTopicComments>();
-            foreach (Topic topic in topics)
-            {
-                string url = GetRequestApiUrl(ApiRequest.COMMENTS, accessToken, settingsData, topic.TopicID);
-                string Content;
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    var Response = await httpClient.GetAsync(url);
-                    Content = await Response.Content.ReadAsStringAsync();
-                }
-                if (Content != null)
-                {
-                    var jsonFormater = new DataContractJsonSerializer(typeof(DsComments.Rootobject));
-                    MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(Content));
-                    if (jsonFormater.ReadObject(memStream) is DsComments.Rootobject dsTComments)
-                    {
-                        var topicComment = new DsTopicComments() { TopicId = topic.TopicID, Items = dsTComments.response.items };
-                        result.Add(topicComment);
-                        Task.Delay(400).Wait(); // VK api requests amount per second are limited - 3 request per second
-                    }
-                }
-            }
-            
-            return result;
-        }
-
-        public static void RunGetComments(string accessToken, SettingsData settingsData, MainViewModel _mainViewModel)
-        {
-            //CancellationTokenSource ct = new CancellationTokenSource();
-            //ct.CancelAfter(5000);
-            Task.Run(() =>
-            {
-                Task<List<DsTopicComments>> task = GetCommentsAsync(accessToken, settingsData, _mainViewModel.Topics);
-                task.ContinueWith(t =>
-                {
-                    try
-                    {
-                        _mainViewModel.Comments = new ObservableCollection<TopicComment>(DsMapping.MapComments(t.Result));
-                        _mainViewModel.OnPropertyChanged(nameof(_mainViewModel.Comments));
                     }
                     catch (Exception ex)
                     {
@@ -132,8 +75,120 @@ namespace PlayPlan
             );
         }
 
+        private static async Task<DsTopicComments> GetCommentsAsync(string accessToken, SettingsData settingsData, int topicId)
+        {
+            DsTopicComments result = new DsTopicComments();
+            string url = GetRequestApiUrl(ApiRequest.COMMENTS, accessToken, settingsData, topicId);
+            string Content;
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var Response = await httpClient.GetAsync(url);
+                Content = await Response.Content.ReadAsStringAsync();
+            }
+            if (Content != null)
+            {
+                var jsonFormater = new DataContractJsonSerializer(typeof(DsComments.Rootobject));
+                MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(Content));
+                if (jsonFormater.ReadObject(memStream) is DsComments.Rootobject dsTComments)
+                {
+                    result = new DsTopicComments() { TopicId = topicId, Items = dsTComments.response.items };
+                }
 
-        private static string GetRequestApiUrl(ApiRequest apiRewuest, string accessToken, SettingsData settingsData, int parameter = 0)
+            }
+            
+            return result;
+        }
+
+        /// <summary>
+        /// Getting authors of comments  by from_id
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="settingsData"></param>
+        /// <param name="topicComments"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<DsUsers.Response>> GetAuthorAsync(string accessToken, SettingsData settingsData, DsTopicComments topicComments)
+        {
+            IEnumerable<DsUsers.Response> result = null;
+            int ItemsAmount = topicComments.Items.Count();
+            string users_csv = null;
+            foreach (DsComments.Item tc in topicComments.Items)
+            {
+                users_csv = (users_csv == null) ? tc.from_id.ToString() : users_csv + "," + tc.from_id.ToString();
+            }
+            string url = GetRequestApiUrl(ApiRequest.USER, accessToken, settingsData, users_csv);
+            string Content;
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var Response = await httpClient.GetAsync(url);
+                Content = await Response.Content.ReadAsStringAsync();
+            }
+            if (Content != null)
+            {
+                var jsonFormater = new DataContractJsonSerializer(typeof(DsUsers.Rootobject));
+                MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(Content));
+                if (jsonFormater.ReadObject(memStream) is DsUsers.Rootobject dsUser)
+                {
+                    result = dsUser.response.ToList();
+                }
+            }
+            return result;
+        }
+
+        public static void RunGetComments(string accessToken, SettingsData settingsData, MainViewModel _mainViewModel, int topicId)
+        {
+            //CancellationTokenSource ct = new CancellationTokenSource();
+            //ct.CancelAfter(5000);
+            DsTopicComments dsTopicComments = null;
+            Task.Run(() =>
+            {
+                Task<DsTopicComments> task = GetCommentsAsync(accessToken, settingsData, topicId);
+                task.ContinueWith(async t =>
+                {
+                    try
+                    {
+                        dsTopicComments = t.Result;
+                        _mainViewModel.Comments = new ObservableCollection<TopicComment>(DsMapping.MapComments(dsTopicComments));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("RunGetComments() - GetCommentsAsync():" + ex.Message);
+                    }
+
+                }).ContinueWith(async tt =>
+                {
+                    try
+                    {
+                        var tsk = GetAuthorAsync(accessToken, settingsData, dsTopicComments);
+                        tsk.Wait();
+                        _mainViewModel.Authors = tsk.Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("RunGetComments() - GetAuthorAsync():" + ex.Message);
+                    }
+                    finally
+                    {
+                        _mainViewModel.IsLoading = false;
+                    }
+                });
+            }
+            );
+        }
+
+        public static void FillAuthorNames(IEnumerable<DsUsers.Response> authors, ref ObservableCollection<TopicComment> topicComments)
+        {
+            foreach (var comment in topicComments)
+            {
+                var person = authors.Where(a => a.id == comment.PersonID).FirstOrDefault();
+                if (person != null)
+                {
+                    comment.TopicFrom = person.first_name + " " + person.last_name;
+                }
+                
+            }
+        }
+
+        private static string GetRequestApiUrl(ApiRequest apiRewuest, string accessToken, SettingsData settingsData, Object parameter = null)
         {
             string result = String.Empty;
             switch (apiRewuest) 

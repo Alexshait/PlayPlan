@@ -29,7 +29,6 @@ namespace PlayPlan.ViewModels
         public MainViewModel(ViewNavigation viewNavigation, IDataService ds)
         {
             IsLoading = true;
-            //topicComment = _topicComment;
             _viewNavigation = viewNavigation;
             _ds = ds;
             SettingsBtnCmd = new DelegateCommand(o => this.OpenSettingCmd());
@@ -78,7 +77,11 @@ namespace PlayPlan.ViewModels
                 var filtredComments = _comments?.Where(t => t.Topic_ID == _selectedTopicID);
                 return (filtredComments != null) ? new ObservableCollection<TopicComment>(filtredComments) : null; 
             }
-            set { _comments = value; }
+            set 
+            { 
+                _comments = value;
+                
+            }
         }
 
         private int _selectedTopicID;
@@ -86,13 +89,27 @@ namespace PlayPlan.ViewModels
         {
             get { return _selectedTopicID; }
             set 
-            { 
+            {
+                IsLoading = true;
                 _selectedTopicID = value;
+                DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this, _selectedTopicID);
                 OnPropertyChanged(nameof(Comments));
             }
         }
 
-        public TopicComment topicComment { get; set; }
+        private IEnumerable<DsUsers.Response> _authors;
+                    
+        public IEnumerable<DsUsers.Response> Authors
+        {
+            get { return _authors; }
+            set 
+            { 
+                _authors = value;
+                if (_comments != null && Authors != null) DataApi.FillAuthorNames(Authors, ref _comments);
+                OnPropertyChanged(nameof(Comments));
+            }
+        }
+
         public ICommand SettingsBtnCmd { get; private set; }
         public ICommand DownLoadBtnCmd { get; private set; }
         public ICommand AddBtnCmd { get; private set; }
@@ -113,6 +130,7 @@ namespace PlayPlan.ViewModels
             IsLoading = true;
             _viewNavigation.SourceViewModel = this;
             _vkAuthorization = VkAuthorization.GetInstance(_ds);
+            _settingsData = _ds.GetSettingsData();
             if (!_vkAuthorization.AuthorizationIsSuccess)
             {
                 var logonViewModel = new LogonViewModel(_viewNavigation, _vkAuthorization, _ds);
@@ -122,7 +140,7 @@ namespace PlayPlan.ViewModels
             }
             else
             {
-                _settingsData = _ds.GetSettingsData();
+                
                 DataApi.RunGetTopics(_vkAuthorization.AccessToken, _settingsData, this);
                 //DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this);
             }

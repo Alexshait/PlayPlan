@@ -30,14 +30,14 @@ namespace PlayPlan.DataDeserialized
             return result;
         }
 
-        public static IEnumerable<TopicComment> MapComments(List<DsTopicComments> items)
+        public static IEnumerable<TopicComment> MapComments(DsTopicComments dsTopic)
         {
             var result = new List<TopicComment>();
-            foreach (DsTopicComments item in items)
-            {
+            //foreach (DsTopicComments item in items)
+            //{
                 var CommentItem = new TopicComment();
-                CommentItem.Topic_ID = item.TopicId;
-                foreach (DsComments.Item commentItem in item.Items)
+                CommentItem.Topic_ID = dsTopic.TopicId;
+                foreach (DsComments.Item commentItem in dsTopic.Items)
                 {
                     CommentItem.Comment = commentItem.text;
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -45,7 +45,7 @@ namespace PlayPlan.DataDeserialized
                     CommentItem.PersonID = commentItem.from_id;
                 }
                 result.Add(CommentItem);
-            }
+            //}
             return result;
         }
     }

@@ -13,9 +13,9 @@ namespace PlayPlan.DataModel
         public int Topic_ID { get; set; }
         public DateTime DateComment { get; set; }
         public int PersonID { get; set; }
-        public string? TopicFrom { get; set; }
-        public string? Participants { get; set; }
-        public string? Comment { get; set; }
+        public string TopicFrom { get; set; }
+        public string Participants { get; set; }
+        public string Comment { get; set; }
         public DateTime DateUpdate { get; set; }
         public DateTime DateInput { get; set; }
     }
