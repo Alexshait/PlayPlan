@@ -13,46 +13,21 @@ namespace PlayPlan.DataModel
     internal class PlayPlanContext : DbContext
     {
         
-        //private const string DBaseName = "Playplan.db";
-        private readonly string DBaseName = ConfigurationManager.AppSettings.Get("DBaseName") ?? "Playplan.db";
+
         public DbSet<SettingsData> Settings { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<TopicComment> TopicComments { get; set; }
-        public string DbPath { get; }
+        private string _dbPath;
 
-        public PlayPlanContext()
+        public PlayPlanContext(string dbPath)
         {
-            string DefaultPath = Path.Join(Environment.CurrentDirectory, DBaseName);
-            string folder = Environment.CurrentDirectory;
-            if (!File.Exists(DefaultPath))
-            {
-                folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                if (folder != "")
-                {
-                    if (Directory.Exists(folder + "\\Playplan"))
-                    {
-                        folder = folder + "\\Playplan\\";
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(folder + "\\Playplan");
-                        folder = folder + "\\Playplan\\";
-                    }
-                }
-                else
-                {
-                    MessageBox.Show($"Отсутствует системный каталог {Environment.SpecialFolder.ApplicationData}", "Системная ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Environment.Exit(0);
-                }
-            }
-
-            DbPath = Path.Join(folder, DBaseName);
+            _dbPath = dbPath;
             //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");
+        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={_dbPath}");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

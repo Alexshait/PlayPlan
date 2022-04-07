@@ -30,7 +30,6 @@ namespace PlayPlan.Views
         void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             ((MainViewModel)DataContext).DoubleClickCmd.Execute(CommentsLst.SelectedItem);
-            // ((ListViewItem)sender).Content
         }
     }
 }

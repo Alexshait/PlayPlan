@@ -18,11 +18,11 @@ namespace PlayPlan.ViewModels
         private ViewNavigation _navigator;
         private IDataService _ds;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(string dbPath)
         {
 
             _navigator = new ViewNavigation();
-            _ds = new DataService();
+            _ds = new DataService(dbPath);
             _navigator.MainWindowVM = this;
             _navigator.CurrentViewModel = new MainViewModel(_navigator, _ds);
             CurrentViewModel = _navigator.CurrentViewModel;

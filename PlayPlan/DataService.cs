@@ -12,6 +12,12 @@ namespace PlayPlan
 {
     internal class DataService : IDataService
     {
+        private readonly string _dbPath;
+        public DataService(string dbPath)
+        {
+            _dbPath = dbPath;
+        }
+
         public void CommentAddNew(TopicComment topicComment)
         {
             throw new NotImplementedException();
@@ -30,7 +36,7 @@ namespace PlayPlan
         public async Task<IEnumerable<Person>> GetAllPersonsAsync()
         {
             var result = new List<Person>();
-            using (var db = new PlayPlanContext())
+            using (var db = new PlayPlanContext(_dbPath))
             {
                 var qry = await db.Persons.ToListAsync();
                 if (qry != null)
@@ -44,7 +50,7 @@ namespace PlayPlan
         //public IEnumerable<Person> GetAllPersons()
         //{
         //    var result =  new List<Person>();
-        //    using (var db = new PlayPlanContext())
+        //    using (var db = new PlayPlanContext(_dbPath))
         //    {
         //        IQueryable<Person> qry = db.Persons;
         //        result = qry.ToList();
@@ -72,7 +78,7 @@ namespace PlayPlan
         public async Task<IEnumerable<SettingsData>> GetSettingsDataAsync()
         {
             var result = new List<SettingsData>();
-            using (var db = new PlayPlanContext())
+            using (var db = new PlayPlanContext(_dbPath))
             {
                 var qry = await db.Settings.Where(i => i.ID == 1).ToListAsync();
                 if (qry != null)
@@ -95,7 +101,7 @@ namespace PlayPlan
 
         public void PersonAddNew(Person person)
         {
-            using (var db = new PlayPlanContext())
+            using (var db = new PlayPlanContext(_dbPath))
             {
                 db.Persons.Add(person);
                 db.SaveChanges();
@@ -104,7 +110,7 @@ namespace PlayPlan
 
         public void PersonRemove(Person person)
         {
-            using (var db = new PlayPlanContext())
+            using (var db = new PlayPlanContext(_dbPath))
             {
                 db.Persons.Remove(person);
                 db.SaveChanges();
@@ -113,7 +119,7 @@ namespace PlayPlan
 
         public void SettingsSave(SettingsData settingsData)
         {
-            using (var db = new PlayPlanContext())
+            using (var db = new PlayPlanContext(_dbPath))
             {
                 var rec = db.Settings.FirstOrDefault(i => i.ID == 1);
                 if (rec != null)
