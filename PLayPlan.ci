@@ -3,7 +3,7 @@
    <autoclose >0</>
    <compname ></>
    <produrl ></>
-   <ver >0.0.1</>
+   <ver >0.0.2</>
    <supurl ></>
    <updurl ></>
    <dlgfont >verdana</>
@@ -89,6 +89,24 @@
                   <headtext ></>
                   <dlgtext ></>
                   <if ></>
+               </>
+               <_ tag = 0 id = dlgpath >
+                  <desc ></>
+                  <head ></>
+                  <headtext ></>
+                  <dlgtext ></>
+                  <pathadd >PlayPlan</>
+                  <enforce >0</>
+                  <savepath >1</>
+                  <headlogo ></>
+                  <buttons >auto</>
+                  <if ></>
+                  <chlist >
+                     <rows ></>
+                  </>
+                  <varlist >
+                     <rows ></>
+                  </>
                </>
                <_ id = dlglic disabled = 1 >
                   <desc ></>

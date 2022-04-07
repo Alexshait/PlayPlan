@@ -12,32 +12,37 @@ namespace PlayPlan.ViewModels
 {
     public class CommentAddEditViewModel : ViewModelBase
     {
-        private IDataService _ds;
-        public CommentAddEditViewModel(IDataService ds)
+        private TopicComment _topicComment;
+        public CommentAddEditViewModel(TopicComment topicComment, Person selectedPerson)
         {
-            _ds = ds;
+            _topicComment = topicComment;
+            Author = topicComment.CommentFrom;
+            Comment = topicComment.Comment;
+            Participant = topicComment.Participants;
             SaveBtnCmd = new DelegateCommand(obj => this.RunSaveBtnCmd());
             CancelBtnCmd = new DelegateCommand(obj => this.RunCancelBtnCmd());
         }
         public event EventHandler OnRequestClose;
         public event EventHandler OnUpdateListView;
-        public string PersonName { get; set; }
-        public string ParsePhrases { get; set; }
+        public string Author { get; set; }
+        public string Comment { get; set; }
+        public string Participant { get; set; }
 
         public ICommand SaveBtnCmd { get; private set; }
         public ICommand CancelBtnCmd { get; private set; }
         private void RunSaveBtnCmd() 
         {
-            if (PersonName != null)
+            if (Comment != null || Participant != null)
             {
-                var newPerson = (new Person() { PersonName = PersonName, ParsePhrases = ParsePhrases });
-                _ds.PersonAddNew(newPerson);
-                OnUpdateListView(newPerson, new EventArgs());
+                _topicComment.CommentFrom = Author;
+                _topicComment.Comment = Comment;
+                _topicComment.Participants = Participant;
+                OnUpdateListView(_topicComment, new EventArgs());
                 OnRequestClose(this, new EventArgs());
             }
             else
             {
-                MessageBox.Show("Поле 'Организатор' не может быть пустым!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Поле 'Комментарий' или 'Участник' не может быть пустым!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
         private void RunCancelBtnCmd()

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using PlayPlan.Commands;
 using PlayPlan.DataModel;
+using PlayPlan.Views;
 using PlayPlan.DataDeserialized;
 using System.IO;
 using System.Runtime.Serialization.Json;
@@ -120,7 +121,6 @@ namespace PlayPlan.ViewModels
             set { _selectedComment = value; }
         }
 
-
         public ICommand SettingsBtnCmd { get; private set; }
         public ICommand DownLoadBtnCmd { get; private set; }
         public ICommand AddBtnCmd { get; private set; }
@@ -143,6 +143,11 @@ namespace PlayPlan.ViewModels
             _viewNavigation.SourceViewModel = this;
             _vkAuthorization = VkAuthorization.GetInstance(_ds);
             _settingsData = _ds.GetSettingsData();
+            if (_settingsData == null)
+            {
+                MessageBox.Show("Отсутсвуют необходимые настройки приложения. Нажмите на кнопку 'Настройки' и внесите данные приложения.", "Требуются настройки", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
             if (!_vkAuthorization.AuthorizationIsSuccess)
             {
                 var logonViewModel = new LogonViewModel(_viewNavigation, _vkAuthorization, _ds);
@@ -160,10 +165,42 @@ namespace PlayPlan.ViewModels
         }
         private void RunAddBtnCmd()
         {
+            if (_selectedPerson == null)
+            {
+                MessageBox.Show("Необходимо выбрать организатора", "Внимание", MessageBoxButton.OK,MessageBoxImage.Exclamation);
+                return;
+            }
+            var item = new TopicComment();
+            item.Topic_ID = _selectedTopicID;
+            item.PersonID = _selectedPersonID;
+            item.CommentFrom = _selectedPerson.PersonName;
+            if (item != null)
+            {
+                var AddDialog = new CommentAddEdit();
+                var vm = new CommentAddEditViewModel(item, SelectedPerson);
+                vm.OnRequestClose += (s, e) => AddDialog.Close();
+                vm.OnUpdateListView += (s, e) => _comments.Add((TopicComment)s);
+                AddDialog.DataContext = vm;
+                AddDialog.ShowDialog();
+                OnPropertyChanged(nameof(Comments));
+            }
         }
         private void RunRemoveBtnCmd()
         {
-
+            if (SelectedComment != null)
+            {
+                var respone = MessageBox.Show($"Вы действительно намерены удалить запись {SelectedComment.CommentFrom}?",
+                                              "Подтвердить действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (respone == MessageBoxResult.Yes)
+                {
+                    _comments.Remove(SelectedComment);
+                    OnPropertyChanged(nameof(Comments));
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите организатора для удаления из списка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+            };
         }
         private void RunSaveBtnCmd()
         {
@@ -179,7 +216,14 @@ namespace PlayPlan.ViewModels
             var item = sender as TopicComment;
             if (item != null)
             {
-                MessageBox.Show(item.Topic_ID.ToString() + " Double Click handled!");
+                var AddDialog = new CommentAddEdit();
+                var vm = new CommentAddEditViewModel(item, SelectedPerson);
+                vm.OnRequestClose += (s, e) => AddDialog.Close();
+                //vm.OnUpdateListView += (s, e) => OnPropertyChanged(nameof(Comments));
+                //vm.OnUpdateListView += (s, e) => AddDialog.Close();
+                AddDialog.DataContext = vm;
+                AddDialog.ShowDialog();
+                OnPropertyChanged(nameof(Comments));
             }
         }
 

@@ -59,6 +59,11 @@ namespace PlayPlan.Test
             return 190120334;
         }
 
+        public SettingsData GetSettingsData()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<SettingsData>> GetSettingsDataAsync()
         {
             throw new NotImplementedException();

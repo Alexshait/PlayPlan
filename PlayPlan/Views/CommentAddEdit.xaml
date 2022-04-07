@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PlayPlan.Views"
         mc:Ignorable="d"
-        Title="Добавление организатора" Height="250" Width="400" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterOwner">
+        Title="Добавление участника" Height="270" Width="400" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterOwner">
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
@@ -21,18 +21,18 @@
         <Label Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="Автор:"/>
         <Label Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="Комментарий:"/>
         <Label Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="Участник:"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Margin="0 5 0 5" Grid.ColumnSpan="1" Text="{Binding PersonName}" IsReadOnly="True"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,5,0,5" Grid.ColumnSpan="1" Text="{Binding ParsePhrases}" />
-        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,5,0,5" Grid.ColumnSpan="1" Text="{Binding ParsePhrases}" Grid.RowSpan="1"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="0 5 0 5" Grid.ColumnSpan="1" Text="{Binding Author}" IsReadOnly="True"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,5,0,5" Grid.ColumnSpan="1" Text="{Binding Comment}" TextWrapping="WrapWithOverflow" />
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,5,0,5" Grid.ColumnSpan="1" Text="{Binding Participant}" Grid.RowSpan="1"/>
         <Grid Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <Button x:Name="AddBtn" Content="Сохранить" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Width="110" FontSize="14" Command="{Binding AddBtnCmd}"/>
+            <Button x:Name="AddBtn" Content="Сохранить" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Width="110" FontSize="14" Command="{Binding SaveBtnCmd}"/>
             <Button x:Name="CancelBtn" Content="Отмена" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Width="110" FontSize="14" Command="{Binding CancelBtnCmd}"/>
         </Grid>
     </Grid>
