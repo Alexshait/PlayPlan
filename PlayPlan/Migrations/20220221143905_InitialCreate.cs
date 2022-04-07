@@ -68,7 +68,7 @@ namespace PlayPlan.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     DateComment = table.Column<DateTime>(type: "TEXT", nullable: false),
                     PersonID = table.Column<int>(type: "INTEGER", nullable: false),
-                    TopicFrom = table.Column<string>(type: "TEXT", nullable: true),
+                    CommentFrom = table.Column<string>(type: "TEXT", nullable: true),
                     Participants = table.Column<string>(type: "TEXT", nullable: true),
                     Comment = table.Column<string>(type: "TEXT", nullable: true),
                     DateUpdate = table.Column<DateTime>(type: "TEXT", nullable: false),

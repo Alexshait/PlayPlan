@@ -117,8 +117,8 @@
                         <comptype >default</>
                         <ratio >r5</>
                         <solid >1</>
-                        <path >custom</>
-                        <custpath >$appdata$\PlayPlan</>
+                        <path >inst</>
+                        <custpath ></>
                         <ifexist >overnewer</>
                         <if ></>
                         <srclist >
@@ -141,9 +141,9 @@
                         <desc ></>
                         <shpath >prog</>
                         <shfile >PlayPlan</>
-                        <path >app</>
+                        <path >inst</>
                         <file >PlayPlan.exe</>
-                        <icon ></>
+                        <icon >C:\Users\alexey\MEGA\Works\Git\PlayPlan\PlayPlan\Resources\trophy_gold.ico</>
                         <cmdline ></>
                         <comment ></>
                         <work >app</>

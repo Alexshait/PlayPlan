@@ -182,7 +182,7 @@ namespace PlayPlan
                 var person = authors.Where(a => a.id == comment.PersonID).FirstOrDefault();
                 if (person != null)
                 {
-                    comment.TopicFrom = person.first_name + " " + person.last_name;
+                    comment.CommentFrom = person.first_name + " " + person.last_name;
                 }
                 
             }

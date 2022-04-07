@@ -37,6 +37,8 @@ namespace PlayPlan.ViewModels
             RemoveBtnCmd = new DelegateCommand(o => this.RunRemoveBtnCmd());
             SaveBtnCmd = new DelegateCommand(o => this.RunSaveBtnCmd());
             ExportBtnCmd = new DelegateCommand(o => this.RunExportBtnCmd());
+            DoubleClickCmd = new DelegateCommand(new Action<object>(RunDoubleClickCmd));
+            //DoubleClickCmd = new DelegateCommand(o => this.RunDoubleClickCmd());
 
             RunGetAllPersonsAsync();
             
@@ -110,12 +112,22 @@ namespace PlayPlan.ViewModels
             }
         }
 
+        private TopicComment _selectedComment;
+
+        public TopicComment SelectedComment
+        {
+            get { return _selectedComment; }
+            set { _selectedComment = value; }
+        }
+
+
         public ICommand SettingsBtnCmd { get; private set; }
         public ICommand DownLoadBtnCmd { get; private set; }
         public ICommand AddBtnCmd { get; private set; }
         public ICommand RemoveBtnCmd { get; private set; }
         public ICommand SaveBtnCmd { get; private set; }
         public ICommand ExportBtnCmd { get; private set; }
+        public ICommand DoubleClickCmd { get; private set; }
 
         private void OpenSettingCmd()
         {
@@ -162,6 +174,15 @@ namespace PlayPlan.ViewModels
 
         }
 
+        private void RunDoubleClickCmd(object sender)
+        {
+            var item = sender as TopicComment;
+            if (item != null)
+            {
+                MessageBox.Show(item.Topic_ID.ToString() + " Double Click handled!");
+            }
+        }
+
         public void RunGetAllPersonsAsync()
         {
             //CancellationTokenSource ct = new CancellationTokenSource();
@@ -202,6 +223,7 @@ namespace PlayPlan.ViewModels
             }
             
         }
+
 
     }
 }

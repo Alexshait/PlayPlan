@@ -74,7 +74,7 @@ namespace PlayPlan
             var result = new List<SettingsData>();
             using (var db = new PlayPlanContext())
             {
-                var qry = await db.Settings.Where(i => i.ID == 0).ToListAsync();
+                var qry = await db.Settings.Where(i => i.ID == 1).ToListAsync();
                 if (qry != null)
                 {
                     result = qry;
@@ -115,7 +115,7 @@ namespace PlayPlan
         {
             using (var db = new PlayPlanContext())
             {
-                var rec = db.Settings.FirstOrDefault(i => i.ID == 0);
+                var rec = db.Settings.FirstOrDefault(i => i.ID == 1);
                 if (rec != null)
                 {
                     rec.ApiID = settingsData.ApiID;

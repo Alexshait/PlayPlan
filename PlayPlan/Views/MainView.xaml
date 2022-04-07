@@ -49,7 +49,7 @@
                   SelectedValue="{Binding Path=SelectedPersonID}"/>
 
         <ListView x:Name="CommentsLst" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="1" 
-                  ItemsSource="{Binding Comments}" >
+                  ItemsSource="{Binding Comments}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding SelectedComment}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -60,7 +60,7 @@
                     <GridViewColumn Header="Автор" Width="150">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock HorizontalAlignment="Left" Text="{Binding TopicFrom}" />
+                                <TextBlock HorizontalAlignment="Left" Text="{Binding CommentFrom}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

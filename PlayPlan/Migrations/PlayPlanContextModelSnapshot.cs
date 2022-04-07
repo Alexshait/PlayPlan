@@ -120,7 +120,7 @@ namespace PlayPlan.Migrations
                     b.Property<int>("PersonID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TopicFrom")
+                    b.Property<string>("CommentFrom")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("TopicID")

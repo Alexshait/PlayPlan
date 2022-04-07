@@ -173,7 +173,7 @@ namespace PlayPlan.ViewModels
             {
                 var settingsData = new SettingsData()
                 {
-                    ID = 0,
+                    //ID = 0,
                     ApiID = int.Parse(ApiID),
                     GroupID = int.Parse(GroupID),
                     GroupName = GroupName,
