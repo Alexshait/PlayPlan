@@ -32,20 +32,17 @@ namespace PlayPlan.DataDeserialized
         public static IEnumerable<TopicComment> MapComments(DsTopicComments dsTopic)
         {
             var result = new List<TopicComment>();
-            //foreach (DsTopicComments item in items)
-            //{
-                var CommentItem = new TopicComment();
-                CommentItem.Topic_ID = dsTopic.TopicId;
-                foreach (DsComments.Item commentItem in dsTopic.Items)
-                {
-                    CommentItem.Comment = commentItem.text;
-                    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    CommentItem.DateComment = dateTime.AddSeconds(commentItem.date).ToLocalTime();
-                    CommentItem.PersonID = commentItem.from_id;
-                    CommentItem.CommentID = commentItem.id;
-                }
-                result.Add(CommentItem);
-            //}
+            foreach (DsComments.Item commentItem in dsTopic.Items)
+            {
+                var NewComment = new TopicComment();
+                NewComment.Topic_ID = dsTopic.TopicId;
+                NewComment.Comment = commentItem.text;
+                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                NewComment.DateComment = dateTime.AddSeconds(commentItem.date).ToLocalTime();
+                NewComment.PersonID = commentItem.from_id;
+                NewComment.CommentID = commentItem.id;
+                result.Add(NewComment);
+            }
             return result;
         }
     }

@@ -21,7 +21,7 @@
         </DataTemplate>
     </Window.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Disabled">
         <ContentControl Content="{Binding CurrentViewModel}" />
     </ScrollViewer>
 </Window>

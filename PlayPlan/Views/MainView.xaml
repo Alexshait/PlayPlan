@@ -64,7 +64,7 @@
                   SelectedValuePath="ID"
                   SelectedValue="{Binding Path=SelectedPersonID}"/>
 
-        <ListView x:Name="CommentsLst" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="1" 
+        <ListView x:Name="CommentsLst" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="1" ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ItemsSource="{Binding Comments}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding SelectedComment}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

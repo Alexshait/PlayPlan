@@ -209,7 +209,6 @@ namespace PlayPlan.ViewModels
             {
                 
                 DataApi.RunGetTopics(_vkAuthorization.AccessToken, _settingsData, this);
-                //DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this);
             }
 
         }
