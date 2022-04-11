@@ -3,7 +3,7 @@
    <autoclose >0</>
    <compname ></>
    <produrl ></>
-   <ver >0.1.0</>
+   <ver >0.1.1</>
    <supurl ></>
    <updurl ></>
    <dlgfont >verdana</>
@@ -184,6 +184,8 @@
                         <name ></>
                         <path >inst</>
                         <ifile ></>
+                        <estsize ></>
+                        <forcu >0</>
                      </>
                   </>
                   <desc >Go into the item for viewing unpacking actions.</>
@@ -213,6 +215,7 @@
                   <head ></>
                   <headtext ></>
                   <dlgtext ></>
+                  <if ></>
                </>
             </>
             <icofile >default</>
