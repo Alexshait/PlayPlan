@@ -5,4 +5,4 @@
 
 ![Список сообщений][mainview]
 
-[mainview]: PlayPlan/PlayPlan/Resources/MainScreen.jpg "Список сообщений"
+[mainview]: PlayPlan/Resources/MainScreen.jpg "Список сообщений"
