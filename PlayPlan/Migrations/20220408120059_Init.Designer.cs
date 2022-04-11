@@ -11,8 +11,8 @@ using PlayPlan.DataModel;
 namespace PlayPlan.Migrations
 {
     [DbContext(typeof(PlayPlanContext))]
-    [Migration("20220221143905_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220408120059_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,15 +29,17 @@ namespace PlayPlan.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PersonName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Persons");
+                    b.HasIndex("ID")
+                        .IsUnique();
+
+                    b.ToTable("Persons", (string)null);
                 });
 
-            modelBuilder.Entity("PlayPlan.DataModel.Setting", b =>
+            modelBuilder.Entity("PlayPlan.DataModel.SettingsData", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -55,23 +57,26 @@ namespace PlayPlan.Migrations
                     b.Property<string>("GroupName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PersonFieldName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TopicParsePhrases")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("VkApiVer")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WindowHeigth")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WindowWidth")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Settings");
+                    b.HasIndex("ID")
+                        .IsUnique();
+
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("PlayPlan.DataModel.Topic", b =>
                 {
-                    b.Property<int>("TopicID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -87,25 +92,34 @@ namespace PlayPlan.Migrations
                     b.Property<DateTime>("TopicDateUpdate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TopicID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("TopicTitle")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TopicUpdatedBy")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TopicID");
+                    b.HasKey("Id");
 
                     b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("PlayPlan.DataModel.TopicComment", b =>
                 {
-                    b.Property<int>("Topic_ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Comment")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("CommentFrom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CommentID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateComment")
                         .HasColumnType("TEXT");
@@ -122,15 +136,15 @@ namespace PlayPlan.Migrations
                     b.Property<int>("PersonID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CommentFrom")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("TopicID")
+                    b.Property<int?>("TopicId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Topic_ID");
+                    b.Property<int>("Topic_ID")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("TopicID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopicId");
 
                     b.ToTable("TopicComments");
                 });
@@ -139,7 +153,7 @@ namespace PlayPlan.Migrations
                 {
                     b.HasOne("PlayPlan.DataModel.Topic", null)
                         .WithMany("TopicComments")
-                        .HasForeignKey("TopicID");
+                        .HasForeignKey("TopicId");
                 });
 
             modelBuilder.Entity("PlayPlan.DataModel.Topic", b =>

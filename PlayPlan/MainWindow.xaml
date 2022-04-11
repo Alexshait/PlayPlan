@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:PlayPlan.ViewModels"
         xmlns:views="clr-namespace:PlayPlan.Views"
         mc:Ignorable="d"
-        Title="PlayPlan" MinHeight="550" MinWidth="600" Loaded="Window_Loaded">
+        Title="{Binding TitleVersion}" MinHeight="550" MinWidth="600" Loaded="Window_Loaded">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:LogonViewModel}">

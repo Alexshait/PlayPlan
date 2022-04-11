@@ -20,12 +20,23 @@ namespace PlayPlan.ViewModels
 
         public MainWindowViewModel(string dbPath)
         {
-
+            _titleVersion = "PlayPlan v." + typeof(App).Assembly.GetName().Version.ToString();
             _navigator = new ViewNavigation();
             _ds = new DataService(dbPath);
             _navigator.MainWindowVM = this;
             _navigator.CurrentViewModel = new MainViewModel(_navigator, _ds);
             CurrentViewModel = _navigator.CurrentViewModel;
+        }
+
+        private string _titleVersion;
+
+        public string TitleVersion
+        {
+            get { return _titleVersion; }
+            set { 
+                _titleVersion = value;
+                OnPropertyChanged(nameof(TitleVersion));
+            }
         }
 
         public ViewModelBase CurrentViewModel

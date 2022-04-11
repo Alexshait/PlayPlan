@@ -23,7 +23,6 @@ namespace PlayPlan.DataDeserialized
                 topicItem.TopicDateUpdate = dateTime.AddSeconds(item.updated).ToLocalTime();
                 topicItem.TopicCreatedBy = item.created_by;
                 topicItem.TopicUpdatedBy = item.updated_by;
-                topicItem.TopicCommentsAmount = item.comments;
 
                 result.Add(topicItem);
             }

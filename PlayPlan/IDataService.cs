@@ -10,10 +10,8 @@ namespace PlayPlan
     public interface IDataService
     {
         IEnumerable<Topic> GetTopicsAll();
-        void CommentAddNew(TopicComment topicComment);
-        void CommentRemove(int commentID);
-        IEnumerable<TopicComment> GetComments(int topicID);
-        int CommentsAmount(int topicID);
+        Task SaveTopicCommentsAsync(IEnumerable<TopicComment> topicComments, DateTime dateTime);
+        Task RemoveTopicCommentsAsync(DateTime dateTime);
         IEnumerable<TopicComment> GetTopicCommentsFiltered(DateTime dateTime);
         Task<IEnumerable<Person>> GetAllPersonsAsync();
         Task<IEnumerable<SettingsData>> GetSettingsDataAsync();
@@ -22,6 +20,10 @@ namespace PlayPlan
         void SettingsSave(SettingsData settingsData);
         string GetAuthUrl();
         public SettingsData GetSettingsData();
+        void SaveTopics(IEnumerable<Topic> topics);
+
+        public Task<List<TopicComment>> GetCommentsAsync(int topicID);
+        public Task<List<ExcelReport>> ExcelReportAsync(DateTime dateFrom, DateTime dateTo);
 
     }
 }

@@ -11,21 +11,6 @@ namespace PlayPlan.Test
         {
         }
 
-        public void CommentAddNew(TopicComment topicComment)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CommentRemove(int commentID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int CommentsAmount(int topicID)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Person> GetAllPersons()
         {
             var lst = new[] { new Person() { PersonName = "Бирюков Алексей", ParsePhrases = "Бирюков"},
@@ -95,6 +80,21 @@ namespace PlayPlan.Test
         }
 
         public void PersonRemove(Person person)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveTopicComments(IEnumerable<TopicComment> topicComments)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveTopicComments(IEnumerable<TopicComment> topicComments, DateTime dateTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveTopics(IEnumerable<Topic> topics)
         {
             throw new NotImplementedException();
         }

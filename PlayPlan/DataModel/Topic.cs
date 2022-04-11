@@ -10,13 +10,14 @@ namespace PlayPlan.DataModel
     public class Topic
     {
         [Key]
+        public int Id { get; set; }
         public int TopicID { get; set; }
-        public string? TopicTitle { get; set; }
+        public string TopicTitle { get; set; }
         public int TopicCreatedBy { get; set; }
         public int TopicUpdatedBy { get; set; }
         public DateTime TopicDateCreate { get; set; }
         public DateTime TopicDateUpdate { get; set; }
-        public int TopicCommentsAmount { get; set; }
+        public int TopicCommentsAmount2 { get; set; }
         public List<TopicComment> TopicComments { get; } = new();
     }
 }

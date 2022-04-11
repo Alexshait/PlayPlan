@@ -18,19 +18,15 @@ namespace PlayPlan
             _dbPath = dbPath;
         }
 
-        public void CommentAddNew(TopicComment topicComment)
+        public async Task RemoveTopicCommentsAsync(DateTime dateTime)
         {
-            throw new NotImplementedException();
-        }
+            using (var db = new PlayPlanContext(_dbPath))
+            {
 
-        public void CommentRemove(int commentID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int CommentsAmount(int topicID)
-        {
-            throw new NotImplementedException();
+                List<TopicComment> toRemove = db.TopicComments.Where(i => i.DateInput == dateTime).ToList();
+                db.TopicComments.RemoveRange(toRemove);
+                await db.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<Person>> GetAllPersonsAsync()
@@ -47,17 +43,6 @@ namespace PlayPlan
             return result;
         }
 
-        //public IEnumerable<Person> GetAllPersons()
-        //{
-        //    var result =  new List<Person>();
-        //    using (var db = new PlayPlanContext(_dbPath))
-        //    {
-        //        IQueryable<Person> qry = db.Persons;
-        //        result = qry.ToList();
-        //    }
-        //    return result;
-        //}
-
 
         public string GetAuthUrl()
         {
@@ -70,9 +55,18 @@ namespace PlayPlan
             return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
         }
 
-        public IEnumerable<TopicComment> GetComments(int topicID)
+        public async Task<List<TopicComment>> GetCommentsAsync(int topicID)
         {
-            throw new NotImplementedException();
+            var result = new List<TopicComment>();
+            using (var db = new PlayPlanContext(_dbPath))
+            {
+                var qry = await db.TopicComments.Where(i => i.Topic_ID == topicID).ToListAsync();
+                if (qry != null)
+                {
+                    result = qry;
+                }
+            }
+            return result;
         }
 
         public async Task<IEnumerable<SettingsData>> GetSettingsDataAsync()
@@ -96,7 +90,11 @@ namespace PlayPlan
 
         public IEnumerable<Topic> GetTopicsAll()
         {
-            throw new NotImplementedException();
+            using (var db = new PlayPlanContext(_dbPath))
+            {
+                if (db.Topics.FirstOrDefault() == null) return Enumerable.Empty<Topic>();
+                return new List<Topic>(db.Topics.ToList());
+            }
         }
 
         public void PersonAddNew(Person person)
@@ -147,6 +145,68 @@ namespace PlayPlan
                 return null;
             }
             return settingData;
+        }
+
+        public async Task SaveTopicCommentsAsync(IEnumerable<TopicComment> topicComments, DateTime dateTime)
+        {
+            foreach(var topicComment in topicComments)
+            {
+                topicComment.DateInput = DateTime.Now;
+                topicComment.DateComment = dateTime;
+            }
+            using (var db = new PlayPlanContext(_dbPath))
+            {
+                db.TopicComments.AddRange(topicComments);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public void SaveTopics(IEnumerable<Topic> topics)
+        {
+            
+            using (var db = new PlayPlanContext(_dbPath))
+            {
+                foreach (var topic in topics)
+                {
+                    var topicRec = db.Topics.Where(r => r.TopicID == topic.TopicID).FirstOrDefault();
+                    if (topicRec != null)
+                    {
+                        topicRec.TopicTitle = topic.TopicTitle;
+                        topicRec.TopicDateCreate = topic.TopicDateCreate;
+                        topicRec.TopicDateUpdate = topic.TopicDateUpdate;
+                        topicRec.TopicUpdatedBy = topic.TopicUpdatedBy;
+                    }
+                    else
+                    {
+                        db.Topics.Add(topic);
+                    }
+                    db.SaveChanges();
+                }
+                
+            }
+        }
+
+        public async Task<List<ExcelReport>> ExcelReportAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            List<ExcelReport> result = new List<ExcelReport>();
+            using (var db = new PlayPlanContext(_dbPath))
+            {
+                var qry = from tc in db.TopicComments
+                          join tp in db.Topics on tc.Topic_ID equals tp.TopicID
+                          where tc.DateComment >= dateFrom.Date && tc.DateComment <= dateTo
+                          select new ExcelReport() { 
+                            DateComment = tc.DateComment,
+                            TopicTitle = tp.TopicTitle,
+                            Participant = tc.Participants ?? "",
+                            Comment = tc.Comment ?? "",
+                            CommentFrom = tc.CommentFrom,
+                            DateInput = tc.DateInput 
+                          };
+
+                result = await qry.ToListAsync();
+            }
+            
+            return result;
         }
     }
 }

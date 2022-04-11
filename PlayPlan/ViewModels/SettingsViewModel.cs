@@ -144,6 +144,7 @@ namespace PlayPlan.ViewModels
         private void RunSettingsAddBtnCmd()
         {
             var AddDialog = new PersonAdd();
+            AddDialog.Owner = Application.Current.MainWindow;
             var vm = new PersonAddViewModel(_ds);
             vm.OnRequestClose += (s, e) => AddDialog.Close();
             vm.OnUpdateListView += (s, e) => _persons.Add((Person)s);

@@ -3,7 +3,7 @@
    <autoclose >0</>
    <compname ></>
    <produrl ></>
-   <ver >0.0.2</>
+   <ver >0.1.0</>
    <supurl ></>
    <updurl ></>
    <dlgfont >verdana</>
@@ -514,4 +514,10 @@
    <csupdate >"<exefilename>"</>
    <crautorun >0</>
    <autoicon ></>
+   <upinclude >0</>
+   <uppath >inst</>
+   <upexe >update.exe</>
+   <upurl ></>
+   <upxml >update.ini</>
+   <upredir ></>
 </>

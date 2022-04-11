@@ -18,7 +18,7 @@ namespace PlayPlan
         private readonly IDataService _ds;
         private string _authUrl;
         private bool _authorizationIsSuccess = false;
-        protected VkAuthorization(IDataService ds)
+        public VkAuthorization(IDataService ds)
         {
             _ds = ds;
             _authUrl = _ds.GetAuthUrl();

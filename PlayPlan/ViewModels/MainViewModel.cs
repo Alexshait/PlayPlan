@@ -21,6 +21,7 @@ namespace PlayPlan.ViewModels
         private ViewNavigation _viewNavigation;
         private IDataService _ds;
         private bool _isLoading;
+        private bool _IsChanged;
         private ObservableCollection<Person> _persons;
         private Person _selectedPerson;
         private ObservableCollection<Topic> _topics;
@@ -77,13 +78,13 @@ namespace PlayPlan.ViewModels
         {
             get 
             {
-                var filtredComments = _comments?.Where(t => t.Topic_ID == _selectedTopicID);
-                return (filtredComments != null) ? new ObservableCollection<TopicComment>(filtredComments) : null; 
+                //var filtredComments = _comments?.Where(t => t.Topic_ID == _selectedTopicID);
+                return (_comments != null) ? new ObservableCollection<TopicComment>(_comments) : null; 
             }
             set 
             { 
                 _comments = value;
-                
+                _IsChanged = false;
             }
         }
 
@@ -93,10 +94,23 @@ namespace PlayPlan.ViewModels
             get { return _selectedTopicID; }
             set 
             {
+                if (_IsChanged == true)
+                {
+                    var MsgBoxRlt = MessageBox.Show("Вы не сохранили изменения. В случае продолжения изменеия в списке будут отменены. Продолжить?", "Не сохранены изменения", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (MsgBoxRlt == MessageBoxResult.No) return;
+                }
+                _IsChanged = false;
                 IsLoading = true;
                 _selectedTopicID = value;
-                DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this, _selectedTopicID);
-                OnPropertyChanged(nameof(Comments));
+                if (_dbIsChecked)
+                {
+                    RunGetCommentFromDbAsync(_selectedTopicID);
+                }
+                else
+                {                 
+                    DataApi.RunGetComments(_vkAuthorization.AccessToken, _settingsData, this, _selectedTopicID);
+                    OnPropertyChanged(nameof(Comments));
+                }
             }
         }
 
@@ -121,6 +135,40 @@ namespace PlayPlan.ViewModels
             set { _selectedComment = value; }
         }
 
+        private DateTime _dateComment = DateTime.Now;
+        public DateTime DateComment
+        {
+            get { return _dateComment; }
+            set { _dateComment = value; }
+        }
+
+        private bool _dbIsChecked;
+        public bool DbIsChecked
+        {
+            get { return _dbIsChecked; }
+            set 
+            {
+                if (_IsChanged == true)
+                {
+                    var MsgBoxRlt = MessageBox.Show("Вы не сохранили изменения. В случае продолжения изменеия в списке будут отменены. Продолжить?", "Не сохранены изменения", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (MsgBoxRlt == MessageBoxResult.No) return;
+                }
+                _dbIsChecked = value;
+                if (_dbIsChecked)
+                {
+                    var topics = _ds.GetTopicsAll();
+                    Topics = new ObservableCollection<Topic>(topics);
+                    OnPropertyChanged(nameof(Topics));
+                }
+                else
+                {
+                    RunDownLoadBtnCmd();
+                }
+                _IsChanged = false;
+            }
+        }
+
+
         public ICommand SettingsBtnCmd { get; private set; }
         public ICommand DownLoadBtnCmd { get; private set; }
         public ICommand AddBtnCmd { get; private set; }
@@ -140,6 +188,8 @@ namespace PlayPlan.ViewModels
         private void RunDownLoadBtnCmd()
         {
             IsLoading = true;
+            _dbIsChecked = false;
+            OnPropertyChanged(nameof(DbIsChecked));
             _viewNavigation.SourceViewModel = this;
             _vkAuthorization = VkAuthorization.GetInstance(_ds);
             _settingsData = _ds.GetSettingsData();
@@ -179,7 +229,7 @@ namespace PlayPlan.ViewModels
                 var AddDialog = new CommentAddEdit();
                 var vm = new CommentAddEditViewModel(item, SelectedPerson);
                 vm.OnRequestClose += (s, e) => AddDialog.Close();
-                vm.OnUpdateListView += (s, e) => _comments.Add((TopicComment)s);
+                vm.OnUpdateListView += (s, e) => { _comments.Add((TopicComment)s); _IsChanged = true; };
                 AddDialog.DataContext = vm;
                 AddDialog.ShowDialog();
                 OnPropertyChanged(nameof(Comments));
@@ -194,6 +244,7 @@ namespace PlayPlan.ViewModels
                 if (respone == MessageBoxResult.Yes)
                 {
                     _comments.Remove(SelectedComment);
+                    _IsChanged = true;
                     OnPropertyChanged(nameof(Comments));
                 }
             }
@@ -204,11 +255,36 @@ namespace PlayPlan.ViewModels
         }
         private void RunSaveBtnCmd()
         {
-            
+            if (_dateComment == DateTime.MinValue)
+            {
+                MessageBox.Show("Необходимо указать дату комментария", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (_IsChanged)
+            {
+                IsLoading = true;
+                foreach (var comment in _comments)
+                {
+                    comment.DateInput = DateTime.Now;
+                }
+                var commentsToChng = new List<TopicComment>(_comments);
+                Task.Run(() => _ds.RemoveTopicCommentsAsync(_dateComment)).ContinueWith(t =>
+                {
+                    _ds.SaveTopicCommentsAsync(commentsToChng, _dateComment);
+                    _ds.SaveTopics(_topics);
+                    _IsChanged = false;
+                    IsLoading = false;
+                });
+            }
         }
         private void RunExportBtnCmd()
         {
-
+            var Dialog = new Export();
+            Dialog.Owner = Application.Current.MainWindow;
+            var vm = new ExportViewModel(_persons, _ds);
+            vm.OnRequestClose += (s, e) => Dialog.Close();
+            Dialog.DataContext = vm;
+            Dialog.ShowDialog();
         }
 
         private void RunDoubleClickCmd(object sender)
@@ -219,7 +295,7 @@ namespace PlayPlan.ViewModels
                 var AddDialog = new CommentAddEdit();
                 var vm = new CommentAddEditViewModel(item, SelectedPerson);
                 vm.OnRequestClose += (s, e) => AddDialog.Close();
-                //vm.OnUpdateListView += (s, e) => OnPropertyChanged(nameof(Comments));
+                vm.OnUpdateListView += (s, e) => _IsChanged = true;
                 //vm.OnUpdateListView += (s, e) => AddDialog.Close();
                 AddDialog.DataContext = vm;
                 AddDialog.ShowDialog();
@@ -253,6 +329,31 @@ namespace PlayPlan.ViewModels
             });
         }
 
+        public void RunGetCommentFromDbAsync(int topicID)
+        {
+            //CancellationTokenSource ct = new CancellationTokenSource();
+            //ct.CancelAfter(5000);
+            Task.Run(() =>
+            {
+                Task<List<TopicComment>> task = _ds.GetCommentsAsync(topicID);
+                task.ContinueWith(t =>
+                {
+                    try
+                    {
+                        _comments = new ObservableCollection<TopicComment>(t.Result);
+                        OnPropertyChanged(nameof(Comments));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                    }
+                });
+            });
+        }
         void OnUrlUpdated(object sender, EventArgs e)
         {
             if (_viewNavigation.CurrentViewModel is LogonViewModel vm)

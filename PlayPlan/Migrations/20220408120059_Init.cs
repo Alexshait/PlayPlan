@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PlayPlan.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace PlayPlan.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PersonName = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonName = table.Column<string>(type: "TEXT", nullable: true),
                     ParsePhrases = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -31,11 +31,11 @@ namespace PlayPlan.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ApiID = table.Column<int>(type: "INTEGER", nullable: false),
                     GroupID = table.Column<int>(type: "INTEGER", nullable: false),
-                    TopicParsePhrases = table.Column<string>(type: "TEXT", nullable: true),
                     VkApiVer = table.Column<string>(type: "TEXT", nullable: true),
                     ApiUrl = table.Column<string>(type: "TEXT", nullable: true),
                     GroupName = table.Column<string>(type: "TEXT", nullable: true),
-                    PersonFieldName = table.Column<string>(type: "TEXT", nullable: true)
+                    WindowWidth = table.Column<string>(type: "TEXT", nullable: true),
+                    WindowHeigth = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,8 +46,9 @@ namespace PlayPlan.Migrations
                 name: "Topics",
                 columns: table => new
                 {
-                    TopicID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    TopicID = table.Column<int>(type: "INTEGER", nullable: false),
                     TopicTitle = table.Column<string>(type: "TEXT", nullable: true),
                     TopicCreatedBy = table.Column<int>(type: "INTEGER", nullable: false),
                     TopicUpdatedBy = table.Column<int>(type: "INTEGER", nullable: false),
@@ -57,38 +58,52 @@ namespace PlayPlan.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Topics", x => x.TopicID);
+                    table.PrimaryKey("PK_Topics", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TopicComments",
                 columns: table => new
                 {
-                    Topic_ID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Topic_ID = table.Column<int>(type: "INTEGER", nullable: false),
                     DateComment = table.Column<DateTime>(type: "TEXT", nullable: false),
                     PersonID = table.Column<int>(type: "INTEGER", nullable: false),
+                    CommentID = table.Column<int>(type: "INTEGER", nullable: false),
                     CommentFrom = table.Column<string>(type: "TEXT", nullable: true),
                     Participants = table.Column<string>(type: "TEXT", nullable: true),
                     Comment = table.Column<string>(type: "TEXT", nullable: true),
                     DateUpdate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateInput = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TopicID = table.Column<int>(type: "INTEGER", nullable: true)
+                    TopicId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TopicComments", x => x.Topic_ID);
+                    table.PrimaryKey("PK_TopicComments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TopicComments_Topics_TopicID",
-                        column: x => x.TopicID,
+                        name: "FK_TopicComments_Topics_TopicId",
+                        column: x => x.TopicId,
                         principalTable: "Topics",
-                        principalColumn: "TopicID");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TopicComments_TopicID",
+                name: "IX_Persons_ID",
+                table: "Persons",
+                column: "ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Settings_ID",
+                table: "Settings",
+                column: "ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TopicComments_TopicId",
                 table: "TopicComments",
-                column: "TopicID");
+                column: "TopicId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

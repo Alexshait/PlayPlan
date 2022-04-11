@@ -20,9 +20,12 @@ namespace PlayPlan.DataModel
         public DbSet<TopicComment> TopicComments { get; set; }
         private string _dbPath;
 
-        public PlayPlanContext(string dbPath)
+        public PlayPlanContext(string dbPath) //string dbPath
         {
+            //string folder = Environment.CurrentDirectory;
+            //_dbPath = Path.Join(folder, "Playplan.db");
             _dbPath = dbPath;
+
             //Database.EnsureDeleted();
             Database.EnsureCreated();
         }

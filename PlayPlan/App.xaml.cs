@@ -16,6 +16,7 @@ namespace PlayPlan
     {
         //private const string DBaseName = "Playplan.db";
         private readonly string DBaseName = ConfigurationManager.AppSettings.Get("DBaseName") ?? "Playplan.db";
+        private readonly string Version = typeof(App).Assembly.GetName().Version.ToString();
         protected override void OnStartup(StartupEventArgs e)
         {
 
