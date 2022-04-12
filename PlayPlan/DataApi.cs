@@ -142,7 +142,7 @@ namespace PlayPlan
             Task.Run(() =>
             {
                 Task<DsTopicComments> task = GetCommentsAsync(accessToken, settingsData, topicId);
-                task.ContinueWith(async t =>
+                task.ContinueWith(t =>
                 {
                     try
                     {
@@ -158,9 +158,8 @@ namespace PlayPlan
                 {
                     try
                     {
-                        var tsk = GetAuthorAsync(accessToken, settingsData, dsTopicComments);
-                        tsk.Wait();
-                        _mainViewModel.Authors = tsk.Result;
+                        var tsk = await GetAuthorAsync(accessToken, settingsData, dsTopicComments);
+                        _mainViewModel.Authors = tsk;
                     }
                     catch (Exception ex)
                     {
