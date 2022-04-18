@@ -267,6 +267,10 @@ namespace PlayPlan.ViewModels
                     comment.DateInput = DateTime.Now;
                 }
                 var commentsToChng = new List<TopicComment>(_comments);
+                foreach (var comment in commentsToChng)
+                {
+                    comment.PersonID = _selectedPersonID;
+                }
                 Task.Run(() => _ds.RemoveTopicCommentsAsync(_dateComment)).ContinueWith(t =>
                 {
                     _ds.SaveTopicCommentsAsync(commentsToChng, _dateComment);
@@ -362,7 +366,7 @@ namespace PlayPlan.ViewModels
                     _viewNavigation.MainWindowVM.CurrentViewModel = this;
                     _viewNavigation.CurrentViewModel = this;
                     vm.Dispose();
-                    Debug.WriteLine("Authize success");
+                    //Debug.WriteLine("Authize success");
                 }
             }
             

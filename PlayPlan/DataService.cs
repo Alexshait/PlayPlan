@@ -151,6 +151,7 @@ namespace PlayPlan
         {
             foreach(var topicComment in topicComments)
             {
+                if (topicComment.CommentFrom == null) continue;
                 topicComment.DateInput = DateTime.Now;
                 topicComment.DateComment = dateTime;
             }
@@ -193,6 +194,7 @@ namespace PlayPlan
             {
                 var qry = from tc in db.TopicComments
                           join tp in db.Topics on tc.Topic_ID equals tp.TopicID
+                          join p in db.Persons on tc.PersonID equals p.ID
                           where tc.DateComment >= dateFrom.Date && tc.DateComment <= dateTo
                           select new ExcelReport() { 
                             DateComment = tc.DateComment,
@@ -200,6 +202,7 @@ namespace PlayPlan
                             Participant = tc.Participants ?? "",
                             Comment = tc.Comment ?? "",
                             CommentFrom = tc.CommentFrom,
+                            PersonName = p.PersonName,
                             DateInput = tc.DateInput 
                           };
 

@@ -72,58 +72,84 @@ namespace PlayPlan.ViewModels
             //ct.CancelAfter(5000);
             Task.Run(async () =>
             {
-                List<ExcelReport> comments = await _ds.ExcelReportAsync(DateFrom, DateTo);
-
-                var workbook = new XLWorkbook();
-                workbook.AddWorksheet("PlayPlan report");
-                var ws = workbook.Worksheet("PlayPlan report");
-
-                if (comments.Count == 0)
+                try
                 {
-                    System.Windows.MessageBox.Show("Записи за указанный период не найдены!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    List<ExcelReport> comments = await _ds.ExcelReportAsync(DateFrom, DateTo);
+
+                    var workbook = new XLWorkbook();
+                    workbook.AddWorksheet("PlayPlan report");
+                    var ws = workbook.Worksheet("PlayPlan report");
+
+                    if (comments.Count == 0)
+                    {
+                        System.Windows.MessageBox.Show("Записи за указанный период не найдены!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        IsLoading = false;
+                        return;
+                    }
+                    int row = 1;
+                    ws.ColumnWidth = 20;
+                    ws.Cell("A" + row.ToString()).Value = "Дата мероприятия";
+                    ws.Cell("B" + row.ToString()).Value = "Организатор";
+                    ws.Cell("C" + row.ToString()).Value = "Автор записи";
+                    ws.Cell("D" + row.ToString()).Value = "Запись";
+                    ws.Cell("E" + row.ToString()).Value = "Место";
+                    ws.Cell("G" + row.ToString()).Value = "Участники";
+                    ws.Cell("F" + row.ToString()).Value = "Дата записи";
+                    row = 2;
+                    foreach (ExcelReport item in comments)
+                    {
+                        if (item.CommentFrom == null) continue;
+                        ws.Cell("A" + row.ToString()).Value = item.DateComment.ToShortDateString();
+                        ws.Cell("B" + row.ToString()).Value = item.PersonName.ToString();
+                        ws.Cell("C" + row.ToString()).Value = item.CommentFrom.ToString();
+                        ws.Cell("D" + row.ToString()).Value = item.Comment.ToString();
+                        ws.Cell("E" + row.ToString()).Value = item.TopicTitle.ToString();
+                        ws.Cell("G" + row.ToString()).Value = item.Participant.ToString();
+                        ws.Cell("F" + row.ToString()).Value = item.DateInput.ToString();
+                        row++;
+                    }
+
+                    TempFile = Path.GetTempFileName() + ".xlsx";
+                    workbook.SaveAs(TempFile);
+                    workbook.Dispose();
                     IsLoading = false;
-                    return;
                 }
-                int row = 1;
-                ws.ColumnWidth = 20;
-                ws.Cell("A" + row.ToString()).Value = "Дата мероприятия";
-                ws.Cell("B" + row.ToString()).Value = "Автор";
-                ws.Cell("C" + row.ToString()).Value = "Запись";
-                ws.Cell("D" + row.ToString()).Value = "Место";
-                ws.Cell("E" + row.ToString()).Value = "Дата записи";
-                ws.Cell("F" + row.ToString()).Value = "Участники";
-                row = 2;
-                foreach (ExcelReport item in comments)
+                catch (Exception ex)
                 {
-                    ws.Cell("A" + row.ToString()).Value = item.DateComment.ToShortDateString();
-                    ws.Cell("B" + row.ToString()).Value = item.CommentFrom.ToString();
-                    ws.Cell("C" + row.ToString()).Value = item.Comment.ToString();
-                    ws.Cell("D" + row.ToString()).Value = item.TopicTitle.ToString();
-                    ws.Cell("E" + row.ToString()).Value = item.DateInput.ToLongDateString();
-                    ws.Cell("F" + row.ToString()).Value = item.Participant.ToString();
-                    row++;
+                    System.Windows.MessageBox.Show("RunSaveBtnCmd() - Error of saving file: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
-                TempFile = Path.GetTempFileName() + ".xlsx";
-                workbook.SaveAs(TempFile);
-                workbook.Dispose();
-                IsLoading = false;
 
             }).ContinueWith(t =>
             {
-                if (File.Exists(TempFile))
+                try
                 {
-                    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                    saveFileDialog1.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-                    saveFileDialog1.FilterIndex = 1;
-                    saveFileDialog1.RestoreDirectory = true;
-                    saveFileDialog1.DefaultExt = "xlsx";
-                    saveFileDialog1.FileName = "PlayplanReport";
-                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    if (File.Exists(TempFile))
                     {
-                        File.Move(TempFile, saveFileDialog1.FileName, true);
+                        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                        saveFileDialog1.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                        saveFileDialog1.FilterIndex = 1;
+                        saveFileDialog1.RestoreDirectory = true;
+                        saveFileDialog1.DefaultExt = "xlsx";
+                        saveFileDialog1.FileName = "PlayplanReport";
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            File.Move(TempFile, saveFileDialog1.FileName, true);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    if (ex.HResult == -2147024891)
+                    {
+                        System.Windows.MessageBox.Show("Невозможно сохранить файл. Вероятно он открыт другим приложением. " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        System.Windows.MessageBox.Show("RunSaveBtnCmd() - Error of moving file: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 

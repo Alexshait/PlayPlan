@@ -39,7 +39,7 @@ namespace PlayPlan.DataDeserialized
                 NewComment.Comment = commentItem.text;
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 NewComment.DateComment = dateTime.AddSeconds(commentItem.date).ToLocalTime();
-                NewComment.PersonID = commentItem.from_id;
+                NewComment.UserID = commentItem.from_id;
                 NewComment.CommentID = commentItem.id;
                 result.Add(NewComment);
             }

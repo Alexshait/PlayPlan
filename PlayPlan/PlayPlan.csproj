@@ -7,17 +7,30 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
 	<ApplicationIcon>Resources\trophy_gold.ico</ApplicationIcon>
-	<AssemblyVersion>0.1.1.0</AssemblyVersion>
-	<FileVersion>0.1.1.0</FileVersion>
+	<AssemblyVersion>0.1.2.0</AssemblyVersion>
+	<FileVersion>0.1.2.0</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\LogonView.xaml.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\minus.png" />
     <None Remove="Resources\plus.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Remove="Views\LogonView.xaml" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Folder Include="Commands\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Views\LogonView.xaml" />
+	  <None Include="Views\LogonView.xaml.cs" />
 	</ItemGroup>
 	
   <ItemGroup>

@@ -178,7 +178,7 @@ namespace PlayPlan
         {
             foreach (var comment in topicComments)
             {
-                var person = authors.Where(a => a.id == comment.PersonID).FirstOrDefault();
+                var person = authors.Where(a => a.id == comment.UserID).FirstOrDefault();
                 if (person != null)
                 {
                     comment.CommentFrom = person.first_name + " " + person.last_name;

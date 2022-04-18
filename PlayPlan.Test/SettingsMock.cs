@@ -11,6 +11,11 @@ namespace PlayPlan.Test
         {
         }
 
+        public Task<List<ExcelReport>> ExcelReportAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Person> GetAllPersons()
         {
             var lst = new[] { new Person() { PersonName = "Бирюков Алексей", ParsePhrases = "Бирюков"},
@@ -35,6 +40,11 @@ namespace PlayPlan.Test
         }
 
         public IEnumerable<TopicComment> GetComments(int topicID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<TopicComment>> GetCommentsAsync(int topicID)
         {
             throw new NotImplementedException();
         }
@@ -89,7 +99,17 @@ namespace PlayPlan.Test
             throw new NotImplementedException();
         }
 
+        public Task RemoveTopicCommentsAsync(DateTime dateTime)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveTopicComments(IEnumerable<TopicComment> topicComments, DateTime dateTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveTopicCommentsAsync(IEnumerable<TopicComment> topicComments, DateTime dateTime)
         {
             throw new NotImplementedException();
         }
