@@ -18,17 +18,8 @@
             viewmodels:LogonWebBrowserBinding.BindableSource="{Binding Path=(viewmodels:LogonViewModel.WebAddress), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             viewmodels:LogonWebBrowserBinding.ShouldHandleNavigated="True"
             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-            ScrollViewer.VerticalScrollBarVisibility="Hidden"
-            
-            x:Name="LogonWebBrowserCtrl" RenderTransformOrigin="0.5,0.5" >
-            <WebBrowser.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="150" ScaleY="150"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </WebBrowser.RenderTransform>
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"          
+            x:Name="LogonWebBrowserCtrl"  >
         </WebBrowser>
         <Button Content="Назад" Grid.Column="0" Grid.Row="1" Width="150" Command="{Binding BackBtn}" />
     </Grid>
