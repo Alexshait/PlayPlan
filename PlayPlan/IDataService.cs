@@ -22,7 +22,7 @@ namespace PlayPlan
         public SettingsData GetSettingsData();
         void SaveTopics(IEnumerable<Topic> topics);
 
-        public Task<List<TopicComment>> GetCommentsAsync(int topicID);
+        public Task<List<TopicComment>> GetCommentsAsync(int topicID, DateTime commentDate);
         public Task<List<ExcelReport>> ExcelReportAsync(DateTime dateFrom, DateTime dateTo);
 
     }

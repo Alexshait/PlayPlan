@@ -19,7 +19,7 @@
             viewmodels:LogonWebBrowserBinding.ShouldHandleNavigated="True"
             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
             ScrollViewer.VerticalScrollBarVisibility="Hidden"          
-            x:Name="LogonWebBrowserCtrl"  >
+            x:Name="LogonWebBrowserCtrl" LoadCompleted="LogonWebBrowserCtrl_LoadCompleted"  >
         </WebBrowser>
         <Button Content="Назад" Grid.Column="0" Grid.Row="1" Width="150" Command="{Binding BackBtn}" />
     </Grid>

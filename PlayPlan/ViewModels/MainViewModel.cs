@@ -40,7 +40,6 @@ namespace PlayPlan.ViewModels
             SaveBtnCmd = new DelegateCommand(o => this.RunSaveBtnCmd());
             ExportBtnCmd = new DelegateCommand(o => this.RunExportBtnCmd());
             DoubleClickCmd = new DelegateCommand(new Action<object>(RunDoubleClickCmd));
-            //DoubleClickCmd = new DelegateCommand(o => this.RunDoubleClickCmd());
 
             RunGetAllPersonsAsync();
             
@@ -104,7 +103,7 @@ namespace PlayPlan.ViewModels
                 _selectedTopicID = value;
                 if (_dbIsChecked)
                 {
-                    RunGetCommentFromDbAsync(_selectedTopicID);
+                    RunGetCommentFromDbAsync(_selectedTopicID, _dateComment.Date);
                 }
                 else
                 {                 
@@ -259,8 +258,14 @@ namespace PlayPlan.ViewModels
                 MessageBox.Show("Необходимо указать дату комментария", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            if (_IsChanged)
+            if (SelectedPerson == null)
             {
+                MessageBox.Show("Выберите организатора мероприятия", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            //if (_IsChanged)
+            //{
+            if (MessageBox.Show($"Организатор {_selectedPerson.PersonName} проводит мероприятие {_dateComment.ToShortDateString()} числа. Сохранить измения участников?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
                 IsLoading = true;
                 foreach (var comment in _comments)
                 {
@@ -278,7 +283,7 @@ namespace PlayPlan.ViewModels
                     _IsChanged = false;
                     IsLoading = false;
                 });
-            }
+            //}
         }
         private void RunExportBtnCmd()
         {
@@ -332,13 +337,13 @@ namespace PlayPlan.ViewModels
             });
         }
 
-        public void RunGetCommentFromDbAsync(int topicID)
+        public void RunGetCommentFromDbAsync(int topicID, DateTime commentDate)
         {
             //CancellationTokenSource ct = new CancellationTokenSource();
             //ct.CancelAfter(5000);
             Task.Run(() =>
             {
-                Task<List<TopicComment>> task = _ds.GetCommentsAsync(topicID);
+                Task<List<TopicComment>> task = _ds.GetCommentsAsync(topicID, commentDate);
                 task.ContinueWith(t =>
                 {
                     try

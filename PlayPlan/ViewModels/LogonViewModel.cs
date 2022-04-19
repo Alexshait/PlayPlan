@@ -45,7 +45,7 @@ namespace PlayPlan.ViewModels
                     if (_webAddress.Contains(TokenMarker))
                     {
                         _vkAuthorization.ResponseAuthUrl = _webAddress;
-                        //Debug.WriteLine(_webAddress);
+                        Debug.WriteLine(_webAddress);
                         UrlUpdated?.Invoke(this, EventArgs.Empty);
                         var SettingsData = _ds.GetSettingsData();
                         DataApi.RunGetTopics(_vkAuthorization.AccessToken, SettingsData, _viewNavigation.SourceViewModel as MainViewModel);
@@ -59,6 +59,8 @@ namespace PlayPlan.ViewModels
 
         private void RunBackBtn()
         {
+            var mainViewModel = _viewNavigation.SourceViewModel as MainViewModel;
+            if (mainViewModel != null) mainViewModel.IsLoading = false;
             _viewNavigation.MainWindowVM.CurrentViewModel = _viewNavigation.SourceViewModel;
             this.Dispose();
         }

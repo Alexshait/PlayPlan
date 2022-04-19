@@ -88,13 +88,14 @@ namespace PlayPlan.ViewModels
                     }
                     int row = 1;
                     ws.ColumnWidth = 20;
+                    ws.Column(5).Width = 40;
                     ws.Cell("A" + row.ToString()).Value = "Дата мероприятия";
                     ws.Cell("B" + row.ToString()).Value = "Организатор";
                     ws.Cell("C" + row.ToString()).Value = "Автор записи";
                     ws.Cell("D" + row.ToString()).Value = "Запись";
                     ws.Cell("E" + row.ToString()).Value = "Место";
-                    ws.Cell("G" + row.ToString()).Value = "Участники";
-                    ws.Cell("F" + row.ToString()).Value = "Дата записи";
+                    ws.Cell("F" + row.ToString()).Value = "Участники";
+                    ws.Cell("G" + row.ToString()).Value = "Дата записи";
                     row = 2;
                     foreach (ExcelReport item in comments)
                     {
@@ -104,8 +105,8 @@ namespace PlayPlan.ViewModels
                         ws.Cell("C" + row.ToString()).Value = item.CommentFrom.ToString();
                         ws.Cell("D" + row.ToString()).Value = item.Comment.ToString();
                         ws.Cell("E" + row.ToString()).Value = item.TopicTitle.ToString();
-                        ws.Cell("G" + row.ToString()).Value = item.Participant.ToString();
-                        ws.Cell("F" + row.ToString()).Value = item.DateInput.ToString();
+                        ws.Cell("F" + row.ToString()).Value = item.Participant.ToString();
+                        ws.Cell("G" + row.ToString()).Value = item.DateInput.ToString();
                         row++;
                     }
 

@@ -47,13 +47,13 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Шаблон соответствия" Width="300">
+                                    <!--<GridViewColumn Header="Шаблон соответствия" Width="300">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock HorizontalAlignment="Left" Width="100" Text="{Binding ParsePhrases}" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
+                                    </GridViewColumn>-->
                                 </GridView>
                             </ListView.View>
                         </ListView>

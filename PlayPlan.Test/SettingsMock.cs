@@ -49,6 +49,11 @@ namespace PlayPlan.Test
             throw new NotImplementedException();
         }
 
+        public Task<List<TopicComment>> GetCommentsAsync(int topicID, DateTime commentDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetGroupID()
         {
             return 190120334;

@@ -128,7 +128,10 @@ namespace PlayPlan
                 MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(Content));
                 if (jsonFormater.ReadObject(memStream) is DsUsers.Rootobject dsUser)
                 {
-                    result = dsUser.response.ToList();
+                    var userList = dsUser.response.ToList();
+                    // GroupID needs to be added to the user list due to comments from name of VK group
+                    userList.Add(new DsUsers.Response() { id = -1 * settingsData.GroupID, first_name = settingsData.GroupName } );
+                    result = userList;
                 }
             }
             return result;

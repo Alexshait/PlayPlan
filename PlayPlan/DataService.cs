@@ -55,16 +55,20 @@ namespace PlayPlan
             return $"{settingData.ApiUrl}authorize?client_id={settingData.ApiID}&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&{settingData.VkApiVer}";
         }
 
-        public async Task<List<TopicComment>> GetCommentsAsync(int topicID)
+        public async Task<List<TopicComment>> GetCommentsAsync(int topicID, DateTime commentDate)
         {
             var result = new List<TopicComment>();
             using (var db = new PlayPlanContext(_dbPath))
             {
-                var qry = await db.TopicComments.Where(i => i.Topic_ID == topicID).ToListAsync();
-                if (qry != null)
+                if (await db.TopicComments.Where(i => i.Topic_ID == topicID && i.DateComment == commentDate).FirstOrDefaultAsync() != null)
                 {
-                    result = qry;
+                    result = await db.TopicComments.Where(i => i.Topic_ID == topicID && i.DateComment == commentDate).ToListAsync();
                 }
+                //var qry = await db.TopicComments.Where(i => i.Topic_ID == topicID).ToListAsync();
+                //if (qry != null)
+                //{
+                //    result = qry;
+                //}
             }
             return result;
         }
@@ -102,7 +106,14 @@ namespace PlayPlan
             using (var db = new PlayPlanContext(_dbPath))
             {
                 db.Persons.Add(person);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("PersonAddNew(): " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -111,7 +122,14 @@ namespace PlayPlan
             using (var db = new PlayPlanContext(_dbPath))
             {
                 db.Persons.Remove(person);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("PersonRemove(): " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -132,7 +150,14 @@ namespace PlayPlan
                 {
                     db.Add(settingsData);
                 }
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("SettingsSave(): " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -153,7 +178,7 @@ namespace PlayPlan
             {
                 if (topicComment.CommentFrom == null) continue;
                 topicComment.DateInput = DateTime.Now;
-                topicComment.DateComment = dateTime;
+                topicComment.DateComment = dateTime.Date;
             }
             using (var db = new PlayPlanContext(_dbPath))
             {
@@ -181,7 +206,14 @@ namespace PlayPlan
                     {
                         db.Topics.Add(topic);
                     }
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("SaveTopics(): " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 
             }
